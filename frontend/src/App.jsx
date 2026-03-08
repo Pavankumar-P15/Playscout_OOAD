@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Home from './pages/Home/Home'
+import Footer from './components/Footer/Footer';
+import Navbar from './components/Navbar/Navbar';
 
 const App = () => {
 
@@ -9,8 +12,11 @@ const App = () => {
     <>
       <div className='app' style={{backgroundColor:'#f1f1f1'}}>
         <ToastContainer />
+        <Navbar />
         <Routes>
+          <Route path='/' element={<Home />} />
         </Routes>
+        <Footer />
       </div>
     </>
   )
