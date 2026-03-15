@@ -1,0 +1,101 @@
+.book-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+  
+.book-popup-container {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  width: 400px;
+  position: relative;
+}
+
+.book-popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.book-popup-header h2 {
+  margin: 0;
+}
+.book-popup-close{
+  cursor: pointer;
+}
+
+.book-popup-content {
+  margin-top: 20px;
+}
+
+.book-popup-info {
+  text-align: center;
+}
+
+.sport-name {
+  font-weight: bold;
+}
+
+.court-location,
+.court-price {
+  margin: 5px 0;
+}
+
+.book-popup-actions {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.confirm-button {
+  background-color: rgb(226,14,59);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.confirm-button:hover {
+  background-color: rgba(250,14,59);
+}
+
+.date-selection {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.slot-selection {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.slot-options {
+  display: flex;
+  justify-content: space-around;
+}
+
+.slot-button {
+  background-color: #e0e0e0;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.slot-button.selected {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.slot-button:hover:not(.selected) {
+  background-color: #d0d0d0;
+}

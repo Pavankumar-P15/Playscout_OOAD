@@ -1,0 +1,53 @@
+.sports-wrapper {
+    position: relative;
+}
+
+.sports-btn-book {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.sports-btn-book img {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+}
+
+.sports-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 150px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-top: 5px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.sports-dropdown li {
+  padding: 10px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.sports-dropdown li:hover {
+  background-color: #f0f0f0;
+}
+
+.sports-dropdown::-webkit-scrollbar {
+  width: 8px;
+}
+
+.sports-dropdown::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 4px;
+}

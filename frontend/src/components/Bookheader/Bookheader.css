@@ -1,0 +1,110 @@
+.book-header {
+  padding: 50px 5vw;
+  background-color: #f5f7f9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.book-title {
+  margin-bottom: 20px;
+}
+
+.book-title h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.book-bar {
+  display: flex;
+  gap: 15px;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.book-bar button {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 25px;
+  padding: 10px 15px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+  display: flex;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.book-bar img {
+  width: 20px;
+}
+
+.book-bar .menu-bar-icons-b {
+  width: 25px;
+}
+
+.book-bar span {
+  padding-left: 5px;
+  padding-top: 2px;
+}
+
+.book-bar .location-btn-book {
+  background-color: #ffecc7;
+  border: 1px solid #cb3c0c;
+}
+
+.book-bar .date-btn-book {
+  background-color: #f0f9ff;
+  border: 1px solid #0099cc;
+}
+
+.book-bar .sports-btn-book {
+  background-color: #e4f7e6;
+  border: 1px solid #4caf50;
+}
+
+.book-bar .filter-btn-book {
+  background-color: #fce4ec;
+  border: 1px solid #e91e63;
+}
+
+.book-bar .create-game-btn-book {
+  background-color: #d1c4e9;
+  border: 1px solid #673ab7;
+  padding: 10px 30px;
+}
+
+.book-bar button:hover {
+  background-color: #e0e0e0;
+  border-color: #bdbdbd;
+}
+.first-text {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 400px;
+  padding: 10px;
+}
+
+.left-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.right-text {
+  font-size: 1.2rem;
+  font-weight: normal;
+  color: #666;
+  border: 2px solid #717374;
+  padding: 10px 15px;
+
+  border-radius: 30px;
+  background-color: #f0f9ff;
+}
+.book-line {
+  width:1000px;
+  height: 2px;
+  background-color: #333;
+}

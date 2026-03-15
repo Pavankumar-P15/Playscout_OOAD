@@ -1,0 +1,11 @@
+.booking-display {
+    background-color: #f5f7f9;
+    padding-bottom: 40px;
+}
+
+.booking-display-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 50px;
+    padding: 0 100px;
+}
