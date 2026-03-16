@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Home from './pages/Home/Home'
 import Footer from './components/Footer/Footer';
 import Navbar from './components/Navbar/Navbar';
+import Book from './pages/Booking/Booking';
 
 const App = () => {
 
@@ -15,6 +16,7 @@ const App = () => {
         <Navbar />
         <Routes>
           <Route path='/' element={<Home />} />
+          <Route path='/book' element={<Book />} />
         </Routes>
         <Footer />
       </div>
