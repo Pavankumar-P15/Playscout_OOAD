@@ -16,7 +16,7 @@ const CreateGame = ({ setShowCreateGame, courtDetails }) => {
   const [availableMembers, setAvailableMembers] = useState('');
   const [level, setLevel] = useState('Casual');
 
-  const { url, fetchGameList } = useContext(StoreContext);
+  const { url,getImageUrl, fetchGameList } = useContext(StoreContext);
   const token = localStorage.getItem('token');
 
   const today = new Date();
@@ -83,7 +83,7 @@ const CreateGame = ({ setShowCreateGame, courtDetails }) => {
         <div className="create-game-content">
           <div className="create-info">
             <h3>{courtName}</h3>
-            <img className="game_icon" src={`${url}/images/${game_icon}${game_icon.includes('.') ? '' : '.png'}`} alt={sport} />
+            <img className="game_icon" src={getImageUrl(game_icon)} alt={sport} />
             <p className="sport-name">{sport}</p>
             <p className="court-location">{courtLocation}</p>
             <p className="court-price">Price: ₹{price}/hr</p>
