@@ -1,7 +1,7 @@
 import React, { useContext,useState } from 'react';
 import './PlayerObject.css';
 import { assets } from '../../assets/assets';
-import { StoreContext } from '../../context/StoreContext';
+import { StoreContext } from '../../context/storeContextInstance';
 import { Link } from 'react-router-dom';
 import JoinPopup from '../JoinPopup/JoinPopup';
 import ChatPopup from '../ChatPopup/ChatPopup';

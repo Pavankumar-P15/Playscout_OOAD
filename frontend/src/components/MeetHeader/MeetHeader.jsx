@@ -3,7 +3,7 @@ import './MeetHeader.css';
 import Location from '../Location/location'
 import Date from '../Date/Date'
 import Sports from '../Sport/Sport'
-import { StoreContext } from '../../context/StoreContext';
+import { StoreContext } from '../../context/storeContextInstance';
 
 const MeetHeader = () => {
   const {setSelectedMeetLocation, selectedMeetSport, setSelectedMeetSport, setStartDate} = useContext(StoreContext);

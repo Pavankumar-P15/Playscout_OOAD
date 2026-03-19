@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import './PlayerDisplay.css'
-import { StoreContext } from '../../context/StoreContext'
+import { StoreContext } from '../../context/storeContextInstance'
 import PlayerObject from '../PlayerObject/PlayerObject'
 
 const PlayerDisplay = ({ selectedMeetSport, selectedMeetLocation, startDate}) => {

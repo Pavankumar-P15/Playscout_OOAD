@@ -27,11 +27,33 @@ public class Game {
     private UUID id;
 
     @Column(name = "date", nullable = false)
-    private String data;
+    private String date;
 
     @Column(name = "filter_date", nullable = false)
     private String filterDate;
 
+    @Column(name = "sport_icon")
+    private String sportIcon;
+
+    @Column(name = "sport_name")
+    private String sportName;
+
+    @Column(name = "user_id")
+    private UUID createdBy;
     
+    @Column(name = "members_joined")
+    private Integer membersJoined;
+
+    @Column(name = "total_members")
+    private Integer totalMembers;
+
+    @Column(name = "skill_level")
+    private String skillLevel;
+
+    @Column(name = "court_name")
+    private String courtName;
+
+    @Column(name = "location")
+    private String location;
 
 }

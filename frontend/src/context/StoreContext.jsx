@@ -1,8 +1,7 @@
-import { createContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { sport_list } from "../assets/assets";
-
-export const StoreContext = createContext(null);
+import { StoreContext } from "./storeContextInstance";
 
 const StoreContextProvider = (props) => {
     const [menu, setMenu] = useState("home");
@@ -19,15 +18,14 @@ const StoreContextProvider = (props) => {
     const [COURT_list, setCourtList] = useState([]);
     const [player_list, setPlayerList] = useState([]);
 
-    // Placeholder functions 
-    // const fetchGameList = async () => {
-    //     try {
-    //         const response = await axios.get(url + "/api/game/game-list");
-    //         setPlayerList(response.data.data);
-    //     } catch (error) {
-    //         console.error("Error fetching games:", error);
-    //     }
-    // }
+    const fetchGameList = async () => {
+        try {
+            const response = await axios.get(url + "/api/game/game-list");
+            setPlayerList(response.data.data);
+        } catch (error) {
+            console.error("Error fetching games:", error);
+        }
+    }
 
     const fetchVenueList = async () => {
         try {
@@ -62,7 +60,7 @@ const StoreContextProvider = (props) => {
         
         async function loadData() {
             await fetchVenueList();
-            // await fetchGameList();
+            await fetchGameList();
         }
         loadData();
     }, []);
@@ -88,7 +86,7 @@ const StoreContextProvider = (props) => {
         setCourtList,
         player_list,
         setPlayerList,
-        // fetchGameList,
+        fetchGameList,
         fetchVenueList,
     };
 

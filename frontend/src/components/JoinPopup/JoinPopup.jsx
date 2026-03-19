@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import './JoinPopup.css';
 import { assets } from '../../assets/assets';
 import axios from 'axios';
-import { StoreContext } from '../../context/StoreContext';
+import { StoreContext } from '../../context/storeContextInstance';
 import { toast } from 'react-toastify';
 
 const JoinPopup = ({ setShowJoinPopup, recipientId, gameId }) => {

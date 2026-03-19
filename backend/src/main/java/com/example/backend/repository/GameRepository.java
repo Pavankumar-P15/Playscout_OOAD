@@ -1,5 +1,10 @@
 package com.example.backend.repository;
 
-public class GameRepository {
-    
-}
+import java.util.UUID;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.example.backend.model.Game;
+
+public interface GameRepository extends JpaRepository<Game, UUID> {  
+} 

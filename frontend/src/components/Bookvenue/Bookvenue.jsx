@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import './Bookingvenue.css'; 
 import Bookpop from '../Bookpop/Bookpop';
 import CreateGame from '../CreateGame/CreateGame';
-import { StoreContext } from '../../context/StoreContext';
+import { StoreContext } from '../../context/storeContextInstance';
 import { Link } from 'react-router-dom';
 
 const Bookvenue = ({ id, className, courtName, courtLocation, courtsAvailable, price, courtImage, game_icon, sport }) => {

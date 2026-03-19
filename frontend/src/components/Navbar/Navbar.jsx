@@ -2,7 +2,7 @@ import React, {useContext, useEffect} from 'react'
 import './Navbar.css'
 import { assets } from '../../assets/assets'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { StoreContext } from '../../context/StoreContext'
+import { StoreContext } from '../../context/storeContextInstance'
 import { Shield, ClipboardPen } from 'lucide-react';
 import {toast} from "react-toastify"
 
