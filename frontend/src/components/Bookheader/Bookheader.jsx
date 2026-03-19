@@ -3,7 +3,7 @@ import './Bookheader.css';
 import Location from '../Location/location';
 import Sports from '../Sport/Sport';
 import BookDisplay from '../Bookingdisplay/Bookdisplay';
-import { StoreContext } from '../../context/StoreContext';
+import { StoreContext } from '../../context/storeContextInstance';
 
 
 const Bookheader = () => {

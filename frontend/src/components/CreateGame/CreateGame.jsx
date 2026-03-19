@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import './CreateGame.css'; 
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { StoreContext } from '../../context/StoreContext';
+import { StoreContext } from '../../context/storeContextInstance';
 import axios from "axios";
 import { toast } from 'react-toastify';
 import { format } from 'date-fns';

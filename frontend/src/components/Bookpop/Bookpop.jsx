@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import './Bookpop.css'; 
 import { assets } from '../../assets/assets'; 
-import { StoreContext } from '../../context/StoreContext';
+import { StoreContext } from '../../context/storeContextInstance';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import axios from "axios"

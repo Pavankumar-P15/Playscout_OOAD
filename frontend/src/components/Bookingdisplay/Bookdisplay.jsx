@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import './Bookdisplay.css'; 
-import { StoreContext } from '../../context/StoreContext';
+import { StoreContext } from '../../context/storeContextInstance';
 import Bookvenue from '../Bookvenue/Bookvenue'; 
 
 const BookDisplay = ({ selectedSport, selectedLocation }) => {
