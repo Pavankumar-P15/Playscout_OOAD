@@ -8,6 +8,8 @@ import Navbar from './components/Navbar/Navbar';
 import Book from './pages/Booking/Booking';
 import Facility from './pages/Facility/Facility';
 import Meet from './pages/Meet/Meet';
+import Chat from './pages/Chat/Chat';
+import News from './pages/News/News';
 
 const App = () => {
 
@@ -21,6 +23,8 @@ const App = () => {
           <Route path='/book' element={<Book />} />
           <Route path='/meet' element={<Meet />} />
           <Route path='/facility/:id' element={<Facility />} />
+          <Route path='/chat' element={<Chat />} />
+          <Route path='/news' element={<News />} />
         </Routes>
         <Footer />
       </div>
