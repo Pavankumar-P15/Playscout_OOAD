@@ -13,6 +13,9 @@ const StoreContextProvider = (props) => {
     const url = import.meta.env.VITE_BACKEND_URL;
     const storageBaseUrl = import.meta.env.VITE_SUPABASE_STORAGE_URL;
     const [token, setToken] = useState("");
+    const [role, setRole] = useState("");
+    const [userId, setUserId] = useState("");
+    const [userImage, setUserImage] = useState("");
     
     // Data lists
     const [COURT_list, setCourtList] = useState([]);
@@ -57,6 +60,15 @@ const StoreContextProvider = (props) => {
         if (localStorage.getItem("token")) {
             setToken(localStorage.getItem("token"));
         }
+        if (localStorage.getItem("role")) {
+            setRole(localStorage.getItem("role"));
+        }
+        if (localStorage.getItem("userId")) {
+            setUserId(localStorage.getItem("userId"));
+        }
+        if (localStorage.getItem("userImage")) {
+            setUserImage(localStorage.getItem("userImage"));
+        }
         
         async function loadData() {
             await fetchVenueList();
@@ -82,6 +94,12 @@ const StoreContextProvider = (props) => {
         getImageUrl,
         token,
         setToken,
+        role,
+        setRole,
+        userId,
+        setUserId,
+        userImage,
+        setUserImage,
         COURT_list,
         setCourtList,
         player_list,

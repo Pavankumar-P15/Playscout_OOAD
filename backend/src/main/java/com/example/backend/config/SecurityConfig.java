@@ -1,43 +1,87 @@
 package com.example.backend.config;
 
+import com.example.backend.security.JwtAuthenticationFilter;
+import com.example.backend.security.OAuth2SuccessHandler;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
-@EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
+
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
+
+    public SecurityConfig(
+            JwtAuthenticationFilter jwtAuthenticationFilter,
+            OAuth2SuccessHandler oAuth2SuccessHandler) {
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.oAuth2SuccessHandler = oAuth2SuccessHandler;
+    }
 
     @Value("${app.cors.allowed-origins:http://localhost:5173}")
     private String allowedOrigins;
 
+    @Value("${app.oauth.enabled:false}")
+    private boolean oauthEnabled;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf.disable())
-                .cors(Customizer.withDefaults())
+        var authConfig = http
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll()
                         .requestMatchers("/api/venue/venue-list").permitAll()
-                        .anyRequest().permitAll());
+                        .requestMatchers("/api/game/game-list").permitAll()
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/facility-manager/**").hasRole("FACILITY_MANAGER")
+                        .requestMatchers("/api/player/**").hasRole("PLAYER")
+                .anyRequest().authenticated());
+
+        if (oauthEnabled) {
+            authConfig.oauth2Login(oauth -> oauth.successHandler(oAuth2SuccessHandler));
+        }
+
+        http
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((req, res, e) ->
+                                res.sendError(HttpServletResponse.SC_UNAUTHORIZED))
+                        .accessDeniedHandler((req, res, e) ->
+                                res.sendError(HttpServletResponse.SC_FORBIDDEN)));
 
         return http.build();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
+        config.setAllowedHeaders(List.of("*"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setExposedHeaders(List.of("Authorization"));
 
         for (String origin : allowedOrigins.split(",")) {
             config.addAllowedOrigin(origin.trim());

@@ -69,6 +69,14 @@
     padding-right: 20px;
 }
 
+.navbar-profile > img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.7);
+}
+
 .navbar-profile-dropdown{
     position: absolute;
     display: none;

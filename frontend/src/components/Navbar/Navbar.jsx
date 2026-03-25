@@ -3,14 +3,26 @@ import './Navbar.css'
 import { assets } from '../../assets/assets'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { StoreContext } from '../../context/storeContextInstance'
-import { Shield, ClipboardPen } from 'lucide-react';
+import { Shield, ClipboardPen, User } from 'lucide-react';
 import {toast} from "react-toastify"
 
-const Navbar = ({setShowLogin, setShowAdmin}) => {
+const Navbar = ({setShowLogin}) => {
 
-  const { menu, setMenu, token, setToken } = useContext(StoreContext)
+  const { menu, setMenu, token, setToken, role, setRole, userImage, getImageUrl } = useContext(StoreContext)
   const location = useLocation();
   const navigate = useNavigate();
+  const isAdmin = role === 'ADMIN';
+
+  const logout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('userImage');
+    setToken('');
+    setRole('');
+    navigate('/');
+    toast.success('Logged out!');
+  }
 
   useEffect(() => {
     const currentPath = location.pathname;
@@ -43,19 +55,17 @@ const Navbar = ({setShowLogin, setShowAdmin}) => {
         {!token
         ?<button onClick={() => setShowLogin(true)} className='navbar-login-button'><span className="navbar-login-text">Login / SignUp</span></button>
         :<div className='navbar-profile'>
-            <img src={assets.profile_icon} alt="" />
+            <img src={getImageUrl(userImage) || assets.profile_icon} alt="" />
             <ul className='navbar-profile-dropdown'>
-              <Link to='upcoming'><li><ClipboardPen style={{ color: 'red', paddingBottom: '10px', paddingRight: '6px'}} size={26} /><p style={{ paddingRight: '10px'}}>Upcoming</p></li></Link>
+              <Link to='/profile'><li><User style={{ color: 'red', paddingBottom: '10px', paddingRight: '6px'}} size={26} /><p style={{ paddingRight: '10px'}}>Profile</p></li></Link>
+              <hr />
+              <Link to='/upcoming'><li><ClipboardPen style={{ color: 'red', paddingBottom: '10px', paddingRight: '6px'}} size={26} /><p style={{ paddingRight: '10px'}}>Upcoming</p></li></Link>
               <hr />
               {isAdmin ? (
                 <Link to="/admin">
                   <li><Shield style={{ color: 'red', paddingBottom: '10px', paddingRight: '6px'}} size={26} /><p>Admin</p></li>
                 </Link>
-              ) : (
-                <li onClick={() => setShowAdmin(true)}>
-                  <Shield style={{ color: 'red', paddingBottom: '10px', paddingRight: '6px'}} size={26} /><p>Become Admin</p>
-                </li>
-              )}
+              ) : <></>}
               <hr />
               <li onClick={logout}><img src={assets.logout_icon} alt="" /><p style={{ paddingLeft: '5px'}}>Logout</p></li>
               <hr />

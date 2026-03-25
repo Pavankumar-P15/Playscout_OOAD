@@ -1,0 +1,90 @@
+.complete-profile-page {
+  min-height: 65vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.complete-profile-card {
+  width: min(460px, 94vw);
+  background: white;
+  border: 1px solid #e7e7e7;
+  border-radius: 10px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.complete-profile-card h2 {
+  margin-bottom: 4px;
+  color: #222;
+}
+
+.complete-profile-card p {
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.complete-profile-card label {
+  font-weight: 600;
+  color: #333;
+}
+
+.complete-profile-card input {
+  border: 1px solid #dedede;
+  border-radius: 6px;
+  padding: 10px 12px;
+  outline: none;
+}
+
+.complete-profile-card select {
+  border: 1px solid #dedede;
+  border-radius: 6px;
+  padding: 10px 12px;
+  outline: none;
+  color: #333;
+  background: #fff;
+}
+
+.avatar-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+.avatar-picker-item {
+  border: 2px solid #dedede;
+  border-radius: 10px;
+  background: #fff;
+  padding: 2px;
+  cursor: pointer;
+}
+
+.avatar-picker-item img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.avatar-picker-item.selected {
+  border-color: rgb(226, 14, 59);
+  box-shadow: 0 0 0 2px rgba(226, 14, 59, 0.2);
+}
+
+.complete-profile-card button {
+  margin-top: 12px;
+  border: none;
+  background: rgb(226, 14, 59);
+  color: white;
+  border-radius: 6px;
+  padding: 12px;
+  cursor: pointer;
+}
+
+.complete-profile-card button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
