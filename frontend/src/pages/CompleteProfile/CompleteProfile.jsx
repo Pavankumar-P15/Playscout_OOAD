@@ -17,6 +17,7 @@ const CompleteProfile = () => {
   const [name, setName] = useState(initialName);
   const [email, setEmail] = useState(initialEmail);
   const [password, setPassword] = useState('');
+  const [selectedRole, setSelectedRole] = useState('PLAYER');
   const [selectedAvatar, setSelectedAvatar] = useState(avatars[0]);
   const [saving, setSaving] = useState(false);
 
@@ -29,6 +30,7 @@ const CompleteProfile = () => {
         name,
         email,
         password,
+        role: selectedRole,
         userImage: selectedAvatar
       });
 
@@ -78,6 +80,17 @@ const CompleteProfile = () => {
           required
           minLength={6}
         />
+
+        <label htmlFor='cp-role'>Choose Role</label>
+        <select
+          id='cp-role'
+          value={selectedRole}
+          onChange={(e) => setSelectedRole(e.target.value)}
+          required
+        >
+          <option value='PLAYER'>Player</option>
+          <option value='FACILITY_MANAGER'>Facility Manager</option>
+        </select>
 
         <label>Choose Avatar</label>
         <div className='avatar-picker-grid'>

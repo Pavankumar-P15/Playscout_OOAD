@@ -14,6 +14,7 @@ const LoginPopup = ({ setShowLogin }) => {
     name: '',
     email: '',
     password: '',
+    role: 'PLAYER',
     userImage: avatars[0]
   });
 
@@ -57,6 +58,7 @@ const LoginPopup = ({ setShowLogin }) => {
             name: data.name,
             email: data.email,
             password: data.password,
+            role: data.role,
             userImage: selectedAvatar
           };
 
@@ -108,6 +110,18 @@ const LoginPopup = ({ setShowLogin }) => {
                 placeholder='Your Name'
                 required
               />
+
+              <label htmlFor='signup-role'>Choose Role</label>
+              <select
+                id='signup-role'
+                name='role'
+                value={data.role}
+                onChange={onChangeHandler}
+                required
+              >
+                <option value='PLAYER'>Player</option>
+                <option value='FACILITY_MANAGER'>Facility Manager</option>
+              </select>
 
               <label>Choose Avatar</label>
               <div className='avatar-picker-grid'>
