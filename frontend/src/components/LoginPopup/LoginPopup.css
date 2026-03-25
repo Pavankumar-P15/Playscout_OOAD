@@ -1,0 +1,151 @@
+.login-popup {
+  position: fixed;
+  z-index: 20;
+  width: 100%;
+  height: 100%;
+  background-color: #00000075;
+  display: grid;
+}
+
+.login-popup-container {
+  place-self: center;
+  width: max(23vw, 330px);
+  color: #808080;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 25px 30px;
+  border-radius: 8px;
+  font-size: 14px;
+  animation: fadeIn 0.5s;
+}
+
+.login-popup-logo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.login-popup-logo img {
+  width: 16px;
+  cursor: pointer;
+}
+
+.login-popup-logo img#login-logo {
+  width: 200px;
+  cursor: pointer;
+}
+
+.login-popup-title {
+  display: flex;
+  color: black;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.login-popup-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.login-popup-inputs input {
+  outline: none;
+  border: 1px solid #d8d8d8;
+  padding: 10px 35px;
+  border-radius: 4px;
+  width: 100%;
+}
+
+.login-popup-inputs select {
+  outline: none;
+  border: 1px solid #d8d8d8;
+  padding: 10px;
+  border-radius: 4px;
+  width: 100%;
+  color: #333;
+  background: #fff;
+}
+
+.name-input label {
+  color: #333;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.avatar-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+.avatar-picker-item {
+  border: 2px solid #dedede;
+  border-radius: 10px;
+  background: #fff;
+  padding: 2px;
+  cursor: pointer;
+}
+
+.avatar-picker-item img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.avatar-picker-item.selected {
+  border-color: rgb(226, 14, 59);
+  box-shadow: 0 0 0 2px rgba(226, 14, 59, 0.2);
+}
+
+.name-input > img,
+.email-input > img,
+.password-input > img {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  margin-top: 8px;
+  margin-left: 8px;
+  pointer-events: none;
+}
+
+.login-popup-container > button {
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
+  color: white;
+  background-color: rgb(226, 14, 59);
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.login-popup-container > button:hover {
+  background-color: rgba(226, 14, 59, 0.9);
+}
+
+.login-popup-container .oauth-button {
+  background-color: #3f3f3f;
+}
+
+.login-popup-container .oauth-button:hover {
+  background-color: #2f2f2f;
+}
+
+.login-popup-condition {
+  display: flex;
+  align-items: start;
+  gap: 8px;
+}
+
+.login-popup-condition input {
+  margin-top: 5px;
+  cursor: pointer;
+}
+
+.login-popup span {
+  color: rgb(226, 14, 59);
+  font-weight: 500;
+  cursor: pointer;
+}
