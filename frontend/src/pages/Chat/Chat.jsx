@@ -24,7 +24,7 @@ const Chat = () => {
     const fetchInitialData = async () => {
       if (!token) return;
       try {
-        const res = await axios.get(`${url}/api/message/get-messages`, {
+        const res = await axios.get(`${url}/api/messages`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         const allMessages = res.data.data;

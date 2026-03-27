@@ -4,7 +4,7 @@ import com.example.backend.dto.AuthResponse;
 import com.example.backend.dto.LoginRequest;
 import com.example.backend.dto.RegisterRequest;
 import com.example.backend.exception.AuthException;
-import com.example.backend.model.Role;
+import com.example.backend.enums.Role;
 import com.example.backend.model.User;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.security.JwtUtil;
@@ -29,7 +29,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse register(RegisterRequest request) {
-        return createPlayerAccount(request, "Email already exists");
+        return createAccount(request, "Email already exists", resolveRequestedRole(request));
     }
 
     @Override
@@ -47,10 +47,10 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse oauthRegister(RegisterRequest request) {
-        return createPlayerAccount(request, "Email already exists");
+        return createAccount(request, "Email already exists", resolveRequestedRole(request));
     }
 
-    private AuthResponse createPlayerAccount(RegisterRequest request, String duplicateMessage) {
+    private AuthResponse createAccount(RegisterRequest request, String duplicateMessage, Role role) {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new AuthException(duplicateMessage);
         }
@@ -60,12 +60,29 @@ public class AuthServiceImpl implements AuthService {
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setUserImage(resolveUserImage(request));
-        user.setRole(Role.PLAYER);
+        user.setRole(role);
 
         userRepository.save(user);
 
         String token = jwtUtil.generateToken(user.getId(), user.getEmail(), user.getRole().name());
         return new AuthResponse(user.getId(), token, user.getRole(), user.getUserImage());
+    }
+
+    private Role resolveRequestedRole(RegisterRequest request) {
+        String rawRole = request.getRole();
+        if (rawRole == null || rawRole.isBlank()) {
+            return Role.PLAYER;
+        }
+
+        try {
+            Role role = Role.valueOf(rawRole.trim().toUpperCase());
+            if (role == Role.ADMIN) {
+                throw new AuthException("Invalid role selected");
+            }
+            return role;
+        } catch (IllegalArgumentException ex) {
+            throw new AuthException("Invalid role selected");
+        }
     }
 
     private String resolveUserImage(RegisterRequest request) {

@@ -6,8 +6,8 @@ import { Link } from 'react-router-dom';
 import JoinPopup from '../JoinPopup/JoinPopup';
 import ChatPopup from '../ChatPopup/ChatPopup';
 
-const PlayObject = ({ id, className,date, filterDate, sportIcon, sportName, userImage, userName, userID,membersJoined, totalMembers, level, courtName, location }) => {
-  const {url} = useContext(StoreContext);
+const PlayObject = ({ id, className,date, sportIcon, sportName, userImage, userName, userID,membersJoined, totalMembers, level, courtName, location }) => {
+  const {url, getImageUrl} = useContext(StoreContext);
   const [showJoinPopup, setShowJoinPopup] = useState(false);
   const [showChatPopup, setShowChatPopup] = useState(false);
 
@@ -38,12 +38,12 @@ const PlayObject = ({ id, className,date, filterDate, sportIcon, sportName, user
 
       <div className="player-content">
         <div className="sport-info">
-          <img src={`${url}/images/${sportIcon}${sportIcon.includes('.') ? '' : '.png'}`} className="sport-icon" alt={sportName} />
+          <img src={getImageUrl(sportIcon)} className="sport-icon" alt={sportName} />
           <span>{sportName}</span>
         </div>
 
         <div className="user-info">
-          <img src={`${url}/images/${userImage}${userImage.includes('.') ? '' : '.png'}`} className="user-image" alt={sportName} />
+          <img src={getImageUrl(userImage)} className="user-image" alt={sportName} />
           <span>{userName}</span>
         </div>
 

@@ -48,7 +48,6 @@
 .profile-card button {
   border: none;
   margin-top: 12px;
-  background: rgb(226, 14, 59);
   color: white;
   border-radius: 6px;
   padding: 12px;
@@ -99,4 +98,8 @@
 .avatar-picker-item.selected {
   border-color: rgb(226, 14, 59);
   box-shadow: 0 0 0 2px rgba(226, 14, 59, 0.2);
+}
+
+.profile-update-submit {
+  background-color: rgb(226, 14, 59);
 }

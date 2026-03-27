@@ -1,12 +1,17 @@
 package com.example.backend.model;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,20 +32,22 @@ public class Game {
     private UUID id;
 
     @Column(name = "date", nullable = false)
-    private String date;
+    private LocalDate date;
 
-    @Column(name = "filter_date", nullable = false)
-    private String filterDate;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User createdBy;
 
-    @Column(name = "sport_icon")
-    private String sportIcon;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "venue_id", nullable = false)
+    private Venue venue;
 
-    @Column(name = "sport_name")
-    private String sportName;
+    @Column(name = "start_time", nullable = false)
+    private LocalTime startTime;
 
-    @Column(name = "user_id")
-    private UUID createdBy;
-    
+    @Column(name = "end_time", nullable = false)
+    private LocalTime endTime;
+
     @Column(name = "members_joined")
     private Integer membersJoined;
 
@@ -49,11 +56,5 @@ public class Game {
 
     @Column(name = "skill_level")
     private String skillLevel;
-
-    @Column(name = "court_name")
-    private String courtName;
-
-    @Column(name = "location")
-    private String location;
 
 }

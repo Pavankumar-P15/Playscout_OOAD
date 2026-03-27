@@ -43,6 +43,11 @@
   .location-dropdown li:hover {
     background-color: #f0f0f0;
   }
+
+  .location-clear-option {
+      font-weight: 600;
+      border-bottom: 1px solid #eee;
+    }
   
   .location-dropdown::-webkit-scrollbar {
     width: 8px;

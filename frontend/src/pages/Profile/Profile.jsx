@@ -184,7 +184,7 @@ const Profile = () => {
           placeholder='Leave empty to keep current password'
         />
 
-        <button type='submit' disabled={saving}>
+        <button type='submit' disabled={saving} className='profile-update-submit'>
           {saving ? 'Saving...' : 'Save Changes'}
         </button>
       </form>

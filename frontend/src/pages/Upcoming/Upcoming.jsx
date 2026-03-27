@@ -7,7 +7,6 @@ import { toast } from 'react-toastify';
 const Upcoming = () => {
   const [bookings, setBookings] = useState([]);
   const [plannedGames, setPlannedGames] = useState([]);
-  const [requests, setRequests] = useState([]);
   const { url, fetchGameList, fetchVenueList, token, getImageUrl } = useContext(StoreContext);
 
   useEffect(() => {
@@ -16,7 +15,7 @@ const Upcoming = () => {
 
   const fetchBookings = async () => {
     try {
-      const response = await axios.get(`${url}/api/bookings/list-bookings`, {
+      const response = await axios.get(`${url}/api/bookings`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setBookings(response?.data?.data || []);
@@ -27,7 +26,7 @@ const Upcoming = () => {
 
   const fetchPlannedGames = async () => {
     try {
-      const response = await axios.get(`${url}/api/game/list-planned-games`, {
+      const response = await axios.get(`${url}/api/games/me`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setPlannedGames(response?.data?.data || []);
@@ -36,58 +35,33 @@ const Upcoming = () => {
     }
   };
 
-  const fetchRequests = async () => {
-    try {
-      const response = await axios.get(`${url}/api/join/get-request`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setRequests(response?.data?.data || []);
-    } catch (error) {
-      setRequests([]);
-    }
-  };
-
-  const handleResponse = async (requestId, status) => {
-    try {
-      const response = await axios.post(
-        `${url}/api/join/respond-request`,
-        { requestId, status },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      if (response?.data?.success) {
-        toast.success(response.data.message);
-        setRequests((prevRequests) =>
-          prevRequests.map((request) => (request._id === requestId ? { ...request, status } : request))
-        );
-      } else {
-        toast.error(response?.data?.message || 'Failed to update request');
-      }
-    } catch (error) {
-      toast.error('Join request update is unavailable right now.');
-    }
-  };
-
   const removeGame = async (gameID) => {
     try {
-      const response = await axios.post(`${url}/api/game/remove-game`, { id: gameID });
+      const response = await axios.delete(`${url}/api/games/${gameID}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       if (response?.data?.success) {
-        toast.success(response.data.message);
-        fetchPlannedGames();
-        fetchGameList();
+        toast.success(response?.data?.message || 'Game cancelled successfully');
+        setPlannedGames((prev) => prev.filter((game) => game._id !== gameID));
+        await Promise.all([fetchPlannedGames(), fetchGameList()]);
       } else {
-        toast.error('Unable to remove game');
+        toast.error(response?.data?.message || 'Unable to cancel planned game');
       }
     } catch (error) {
-      toast.error('Game removal endpoint is unavailable.');
+      toast.error(error?.response?.data?.message || 'Game cancellation endpoint is unavailable.');
     }
   };
 
   const cancelBooking = async (bookId) => {
     try {
-      const response = await axios.post(`${url}/api/bookings/cancel-booking`, { id: bookId });
+      const response = await axios.patch(
+        `${url}/api/bookings/${bookId}`,
+        { status: 'CANCELLED' },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       if (response?.data?.success) {
         toast.success(response.data.message);
+        setBookings((prev) => prev.filter((booking) => booking._id !== bookId));
         fetchBookings();
         fetchVenueList();
       } else {
@@ -106,7 +80,6 @@ const Upcoming = () => {
 
     fetchBookings();
     fetchPlannedGames();
-    fetchRequests();
   }, [token]);
 
   if (!token) {
@@ -133,8 +106,6 @@ const Upcoming = () => {
               <th>Sport</th>
               <th>Date</th>
               <th>Slot</th>
-              <th className='small-column'>Members Joined</th>
-              <th className='small-column'>Total Members</th>
               <th>Cancel</th>
             </tr>
           </thead>
@@ -148,10 +119,8 @@ const Upcoming = () => {
                   <td>{booking.courtName}</td>
                   <td>{booking.courtLocation}</td>
                   <td>{booking.sport}</td>
-                  <td>{(booking.date || '').split('T')[0] || booking.date}</td>
+                  <td>{booking.bookingDate}</td>
                   <td>{booking.slot}</td>
-                  <td className='small-column'>{booking.membersJoined}</td>
-                  <td className='small-column'>{booking.totalMembers}</td>
                   <td>
                     <p onClick={() => cancelBooking(booking._id)} className='book-cancel'>
                       x
@@ -176,60 +145,27 @@ const Upcoming = () => {
               <th>Sport</th>
               <th>Date</th>
               <th>Level</th>
-              <th>Court Name</th>
+              <th>Venue</th>
               <th>Location</th>
               <th>Members Joined</th>
               <th>Total Members</th>
-              <th>Requests</th>
-              <th>Remove</th>
+              <th>Cancel</th>
             </tr>
           </thead>
           <tbody>
             {plannedGames.length > 0 ? (
               plannedGames.map((game, index) => {
-                const gameRequests = requests.filter((request) => request.gameId === game._id);
-
                 return (
                   <tr key={index}>
                     <td>
                       <img src={getImageUrl(game.sportIcon)} alt='Sport' className='icon-image' />
                     </td>
-                    <td>{(game.date || '').split('T')[0] || game.date}</td>
+                    <td>{game.date}</td>
                     <td>{game.level}</td>
                     <td>{game.courtName}</td>
                     <td>{game.location}</td>
                     <td>{game.membersJoined}</td>
                     <td>{game.totalMembers}</td>
-                    <td>
-                      {gameRequests.length > 0 ? (
-                        gameRequests.map((request, i) => (
-                          <div key={i} className='request-details'>
-                            <p>
-                              Request from:
-                              <br />
-                              Name: {request.senderId?.name}
-                              <br />
-                              Mail: {request.senderId?.email}
-                              <br />
-                              Status: {request.status}
-                              <br />
-                              {request.status === 'pending' ? (
-                                <>
-                                  <span className='accept-request' onClick={() => handleResponse(request._id, 'accepted')}>
-                                    √
-                                  </span>
-                                  <span className='book-cancel' onClick={() => handleResponse(request._id, 'declined')}>
-                                    x
-                                  </span>
-                                </>
-                              ) : null}
-                            </p>
-                          </div>
-                        ))
-                      ) : (
-                        <p className='request-details'>No requests</p>
-                      )}
-                    </td>
                     <td>
                       <p onClick={() => removeGame(game._id)} className='book-cancel'>
                         x
@@ -240,7 +176,7 @@ const Upcoming = () => {
               })
             ) : (
               <tr>
-                <td colSpan='9'>No planned games</td>
+                <td colSpan='8'>No planned games</td>
               </tr>
             )}
           </tbody>

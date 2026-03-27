@@ -9,15 +9,14 @@ import { format } from 'date-fns';
 import { assets } from '../../assets/assets';
 
 const CreateGame = ({ setShowCreateGame, courtDetails }) => {
-  const { courtName, courtLocation, price, game_icon, sport, courtImage } = courtDetails;
+  const { id, courtName, courtLocation, price, game_icon, sport } = courtDetails;
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [totalMembers, setTotalMembers] = useState('');
   const [availableMembers, setAvailableMembers] = useState('');
   const [level, setLevel] = useState('Casual');
 
-  const { url,getImageUrl, fetchGameList } = useContext(StoreContext);
-  const token = localStorage.getItem('token');
+  const { url, token, getImageUrl, fetchGameList } = useContext(StoreContext);
 
   const today = new Date();
   const availableDates = [
@@ -28,28 +27,17 @@ const CreateGame = ({ setShowCreateGame, courtDetails }) => {
 
   const handleCreateGame = async () => {
     if (selectedDate && selectedSlot && totalMembers && availableMembers) {
-      const formattedDate = `${format(selectedDate, 'dd MMM, yyyy')} ${selectedSlot}`;
-      const filterDate = format(selectedDate, 'MM/dd/yyyy');
-      const sportIcon = `${sport.replace(/\s+/g, '').toLowerCase()}_icon`;
-      const userImage = localStorage.getItem('userImage');
-      
       const gameData = {
-        date: formattedDate,
-        filterDate,
-        sportIcon,
-        sportName: sport,
-        userImage,
-        userName: '', 
-        userID: '',   
-        membersJoined: 1,
-        totalMembers,
-        level,
-        courtName,
-        location: courtLocation,
+        venueId: id,
+        date: format(selectedDate, 'yyyy-MM-dd'),
+        slot: selectedSlot,
+        totalMembers: Number(totalMembers),
+        membersJoined: Number(availableMembers),
+        skillLevel: level
       };
 
       try {
-        const response = await axios.post(`${url}/api/game/create-game`, gameData, {
+        const response = await axios.post(`${url}/api/games`, gameData, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (response.data.success) {

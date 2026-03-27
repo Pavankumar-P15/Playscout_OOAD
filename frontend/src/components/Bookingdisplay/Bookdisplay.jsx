@@ -7,8 +7,8 @@ const BookDisplay = ({ selectedSport, selectedLocation }) => {
   const { COURT_list } = useContext(StoreContext);
 
   const filteredCourts = COURT_list.filter((item) => {
-    const sportMatch = selectedSport === 'Select Sport' || selectedSport === 'All' || item.sport === selectedSport;
-    const locationMatch = selectedLocation === 'Select Location' || selectedLocation === 'All' || item.courtLocation === selectedLocation;
+    const sportMatch = selectedSport === 'Select Sport' || item.sport === selectedSport;
+    const locationMatch = selectedLocation === 'Select Location' || item.courtLocation === selectedLocation;
 
     return sportMatch && locationMatch;
   });

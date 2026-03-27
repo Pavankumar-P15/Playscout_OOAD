@@ -2,16 +2,45 @@ import React, { useContext } from 'react'
 import './PlayerDisplay.css'
 import { StoreContext } from '../../context/storeContextInstance'
 import PlayerObject from '../PlayerObject/PlayerObject'
+import { format, isValid, parse } from 'date-fns'
+
+const normalizeGameDate = (gameDateValue) => {
+  if (!gameDateValue) return null;
+
+  const dateOnlyPart = gameDateValue
+    .replace(/\s+\d{1,2}:\d{2}\s*-\s*\d{1,2}:\d{2}.*$/, '')
+    .replace(/\b(\d{1,2})(st|nd|rd|th)\b/gi, '$1')
+    .trim();
+
+  const parsedFromExpectedFormat = parse(dateOnlyPart, 'dd MMM, yyyy', new Date());
+  if (isValid(parsedFromExpectedFormat)) {
+    return format(parsedFromExpectedFormat, 'yyyy-MM-dd');
+  }
+
+  const parsedFromNativeDate = new Date(dateOnlyPart);
+  if (Number.isNaN(parsedFromNativeDate.getTime())) {
+    return null;
+  }
+
+  return format(parsedFromNativeDate, 'yyyy-MM-dd');
+};
 
 const PlayerDisplay = ({ selectedMeetSport, selectedMeetLocation, startDate}) => {
 
     const {player_list} = useContext(StoreContext);
 
     const filteredPlayers = player_list.filter((item)=>{
-      const sportMatch = selectedMeetSport === 'Select Sport' || selectedMeetSport === 'All' || item.sportName === selectedMeetSport;
-      const locationMatch = selectedMeetLocation === 'Select Location' || selectedMeetLocation === 'All' || item.location === selectedMeetLocation;
-      const dateMatch = startDate === null || item.filterDate === startDate.toLocaleDateString();
+      const sportMatch = selectedMeetSport === 'Select Sport' || item.sportName === selectedMeetSport;
+      const locationMatch = selectedMeetLocation === 'Select Location' || item.location === selectedMeetLocation;
+      const selectedDateValue = startDate ? format(startDate, 'yyyy-MM-dd') : null;
+      const gameDateValue = normalizeGameDate(item.date);
+      const dateMatch = selectedDateValue === null || selectedDateValue === gameDateValue;
       return sportMatch && locationMatch && dateMatch;
+    }).sort((a, b) => {
+      const dateA = normalizeGameDate(a.date);
+      const dateB = normalizeGameDate(b.date);
+      if (!dateA || !dateB) return 0;
+      return new Date(dateA) - new Date(dateB);
     });
 
   return (
@@ -23,7 +52,6 @@ const PlayerDisplay = ({ selectedMeetSport, selectedMeetLocation, startDate}) =>
                       id={item._id} 
                       className = 'player-display-list-item'
                       date={item.date}
-                      filterDate={item.filterDate}
                       sportIcon={item.sportIcon} 
                       sportName={item.sportName}
                       userImage={item.userImage} 
