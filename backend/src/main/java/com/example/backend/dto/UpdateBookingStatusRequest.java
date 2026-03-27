@@ -1,8 +1,6 @@
 package com.example.backend.dto;
 
-import java.time.LocalDate;
-import java.util.UUID;
-
+import com.example.backend.enums.BookingStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,8 +10,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateBookingRequest {
-    private UUID venueId;
-    private LocalDate bookingDate;
-    private String slot;
+public class UpdateBookingStatusRequest {
+    private BookingStatus status;
 }

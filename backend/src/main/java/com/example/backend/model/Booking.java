@@ -56,12 +56,6 @@ public class Booking {
     @Enumerated(EnumType.STRING)
     private BookingStatus status = BookingStatus.PENDING;
 
-    @Column(name = "total_members")
-    private Integer totalMembers;
-
-    @Column(name = "members_joined")
-    private Integer membersJoined = 1;
-
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 

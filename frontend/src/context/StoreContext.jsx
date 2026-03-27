@@ -4,6 +4,13 @@ import { sport_list } from "../assets/assets";
 import { StoreContext } from "./storeContextInstance";
 
 const StoreContextProvider = (props) => {
+    const getStoredValue = (key) => {
+        if (typeof window === "undefined") {
+            return "";
+        }
+        return localStorage.getItem(key) || "";
+    };
+
     const [menu, setMenu] = useState("home");
     const [selectedSport, setSelectedSport] = useState('Select Sport');
     const [selectedMeetSport, setSelectedMeetSport] = useState('Select Sport');
@@ -12,10 +19,10 @@ const StoreContextProvider = (props) => {
     
     const url = import.meta.env.VITE_BACKEND_URL;
     const storageBaseUrl = import.meta.env.VITE_SUPABASE_STORAGE_URL;
-    const [token, setToken] = useState("");
-    const [role, setRole] = useState("");
-    const [userId, setUserId] = useState("");
-    const [userImage, setUserImage] = useState("");
+    const [token, setToken] = useState(() => getStoredValue("token"));
+    const [role, setRole] = useState(() => getStoredValue("role"));
+    const [userId, setUserId] = useState(() => getStoredValue("userId"));
+    const [userImage, setUserImage] = useState(() => getStoredValue("userImage"));
     
     // Data lists
     const [COURT_list, setCourtList] = useState([]);
@@ -23,7 +30,7 @@ const StoreContextProvider = (props) => {
 
     const fetchGameList = async () => {
         try {
-            const response = await axios.get(url + "/api/game/game-list");
+            const response = await axios.get(url + "/api/games");
             setPlayerList(response.data.data);
         } catch (error) {
             console.error("Error fetching games:", error);
@@ -32,7 +39,7 @@ const StoreContextProvider = (props) => {
 
     const fetchVenueList = async () => {
         try {
-            const response = await axios.get(url + "/api/venue/venue-list");
+            const response = await axios.get(url + "/api/venues");
             setCourtList(response.data.data || []);
         } catch (error) {
             console.error("Error fetching venues:", error);
@@ -56,20 +63,6 @@ const StoreContextProvider = (props) => {
     };
 
     useEffect(() => {
-        // Load token from localStorage if it exists
-        if (localStorage.getItem("token")) {
-            setToken(localStorage.getItem("token"));
-        }
-        if (localStorage.getItem("role")) {
-            setRole(localStorage.getItem("role"));
-        }
-        if (localStorage.getItem("userId")) {
-            setUserId(localStorage.getItem("userId"));
-        }
-        if (localStorage.getItem("userImage")) {
-            setUserImage(localStorage.getItem("userImage"));
-        }
-        
         async function loadData() {
             await fetchVenueList();
             await fetchGameList();

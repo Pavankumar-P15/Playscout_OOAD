@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/venue")
+@RequestMapping("/api/venues")
 @RequiredArgsConstructor
 public class VenueController {
 
     private final VenueService venueService;
 
-    @GetMapping("/venue-list")
+    @GetMapping
     public ResponseEntity<Map<String, Object>> getVenueList() {
         return ResponseEntity.ok(Map.of("success", true, "data", venueService.getVenueList()));
     }

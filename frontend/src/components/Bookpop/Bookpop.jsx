@@ -28,11 +28,10 @@ const Bookpop = ({ setShowBooking, courtDetails }) => {
         venueId: id,
         bookingDate: format(selectedDate, 'yyyy-MM-dd'),
         slot: selectedSlot,
-        totalMembers: 1
       };
     
       try {
-        const response = await axios.post(`${url}/api/bookings/add-booking`, bookingData, {
+        const response = await axios.post(`${url}/api/bookings`, bookingData, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (response.data.success) {

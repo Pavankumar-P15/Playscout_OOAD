@@ -1,5 +1,6 @@
 package com.example.backend.dto;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -14,7 +15,8 @@ public class GameResponse {
     @JsonProperty("_id")
     private UUID id;
 
-    private String date;
+    private LocalDate date;
+    private String slot;
     private String sportIcon;
     private String sportName;
 

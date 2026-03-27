@@ -10,10 +10,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class CreateBookingRequest {
+@NoArgsConstructor
+public class CreateGameRequest {
     private UUID venueId;
-    private LocalDate bookingDate;
+    private LocalDate date;
     private String slot;
+    private Integer totalMembers;
+    private Integer membersJoined;
+    private String skillLevel;
 }

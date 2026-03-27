@@ -22,7 +22,7 @@ const Admin = () => {
 
   const fetchVenues = async () => {
     try {
-      const response = await axios.get(`${url}/api/venue/venue-list`);
+      const response = await axios.get(`${url}/api/venues`);
       setVenues(response?.data?.data || []);
     } catch (error) {
       toast.error('Failed to fetch venues.');
@@ -78,7 +78,7 @@ const Admin = () => {
     formData.append('court-image', venueData.courtImage);
 
     try {
-      const response = await axios.post(`${url}/api/venue/add`, formData, {
+      const response = await axios.post(`${url}/api/venues`, formData, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -109,9 +109,8 @@ const Admin = () => {
     }
 
     try {
-      const response = await axios.post(
-        `${url}/api/venue/remove`,
-        { id: venueID },
+      const response = await axios.delete(
+        `${url}/api/venues/${venueID}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 

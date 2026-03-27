@@ -99,3 +99,7 @@
   border-color: rgb(226, 14, 59);
   box-shadow: 0 0 0 2px rgba(226, 14, 59, 0.2);
 }
+
+.profile-update-submit {
+  background-color: rgb(226, 14, 59);
+}

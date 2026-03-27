@@ -12,7 +12,7 @@ const JoinPopup = ({ setShowJoinPopup, recipientId, gameId }) => {
   const handleConfirmJoin = async () => {
     try {
       const response = await axios.post(
-        `${url}/api/join/send-request`, 
+        `${url}/api/join-requests`, 
         { recipientId, gameId}, 
         { headers: { Authorization: `Bearer ${token}` } }
       );

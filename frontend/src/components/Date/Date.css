@@ -29,3 +29,17 @@
 .datepicker {
   margin: 0;
 }
+
+.date-clear-btn {
+  width: 100%;
+  margin-top: 8px;
+  padding: 8px 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.date-clear-btn:hover {
+  background-color: #f4f4f4;
+}

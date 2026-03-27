@@ -30,12 +30,17 @@ const PlayerDisplay = ({ selectedMeetSport, selectedMeetLocation, startDate}) =>
     const {player_list} = useContext(StoreContext);
 
     const filteredPlayers = player_list.filter((item)=>{
-      const sportMatch = selectedMeetSport === 'Select Sport' || selectedMeetSport === 'All' || item.sportName === selectedMeetSport;
-      const locationMatch = selectedMeetLocation === 'Select Location' || selectedMeetLocation === 'All' || item.location === selectedMeetLocation;
+      const sportMatch = selectedMeetSport === 'Select Sport' || item.sportName === selectedMeetSport;
+      const locationMatch = selectedMeetLocation === 'Select Location' || item.location === selectedMeetLocation;
       const selectedDateValue = startDate ? format(startDate, 'yyyy-MM-dd') : null;
       const gameDateValue = normalizeGameDate(item.date);
       const dateMatch = selectedDateValue === null || selectedDateValue === gameDateValue;
       return sportMatch && locationMatch && dateMatch;
+    }).sort((a, b) => {
+      const dateA = normalizeGameDate(a.date);
+      const dateB = normalizeGameDate(b.date);
+      if (!dateA || !dateB) return 0;
+      return new Date(dateA) - new Date(dateB);
     });
 
   return (

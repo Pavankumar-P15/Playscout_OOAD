@@ -6,7 +6,7 @@ import Sports from '../Sport/Sport'
 import { StoreContext } from '../../context/storeContextInstance';
 
 const MeetHeader = () => {
-  const {setSelectedMeetLocation, selectedMeetSport, setSelectedMeetSport, setStartDate} = useContext(StoreContext);
+  const {selectedMeetLocation, setSelectedMeetLocation, selectedMeetSport, setSelectedMeetSport, startDate, setStartDate} = useContext(StoreContext);
 
   return (
     <div className="meet-header">
@@ -14,8 +14,8 @@ const MeetHeader = () => {
             <h2>Find Players Nearby</h2>
         </div>
         <div className="meet-bar">
-        <Location setSelectedLocation={setSelectedMeetLocation} />
-        <Date setStartDate={setStartDate}/>
+        <Location selectedLocation={selectedMeetLocation} setSelectedLocation={setSelectedMeetLocation} />
+        <Date startDate={startDate} setStartDate={setStartDate}/>
         <Sports selectedSport={selectedMeetSport} setSelectedSport={setSelectedMeetSport} />
         </div>
         <div className="meet-line"></div>

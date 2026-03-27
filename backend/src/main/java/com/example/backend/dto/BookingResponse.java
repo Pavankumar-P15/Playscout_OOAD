@@ -29,7 +29,5 @@ public class BookingResponse {
     private LocalDate bookingDate;
     private String slot;
     private BookingStatus status;
-    private Integer totalMembers;
-    private Integer membersJoined;
     private LocalDateTime createdAt;
 }

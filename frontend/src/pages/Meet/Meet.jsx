@@ -5,14 +5,15 @@ import PlayerDisplay from '../../components/PlayerDisplay/PlayerDisplay'
 import { StoreContext } from '../../context/storeContextInstance'
 
 const Meet = () => {
-  const {selectedMeetLocation, selectedMeetSport, startDate, setSelectedMeetSport} = useContext(StoreContext);
+  const {selectedMeetLocation, selectedMeetSport, startDate, setSelectedMeetSport, setStartDate} = useContext(StoreContext);
   useEffect(() => {
     window.scrollTo(0, 0);
 
     return () => {
       setSelectedMeetSport('Select Sport');
+      setStartDate(null);
     };
-  }, []);
+  }, [setSelectedMeetSport, setStartDate]);
 
   return (
     <div>

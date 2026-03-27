@@ -57,8 +57,6 @@ public class BookingService {
         booking.setBookingDate(request.getBookingDate());
         booking.setStartTime(startTime);
         booking.setEndTime(endTime);
-        booking.setTotalMembers(request.getTotalMembers() != null ? request.getTotalMembers() : 1);
-        booking.setMembersJoined(1);
         booking.setStatus(BookingStatus.PENDING);
 
         Booking saved = bookingRepository.save(booking);
@@ -71,6 +69,7 @@ public class BookingService {
 
         return bookingRepository.findByUser_IdOrderByCreatedAtDesc(user.getId())
                 .stream()
+            .filter(booking -> booking.getStatus() != BookingStatus.CANCELLED)
                 .map(this::toResponse)
                 .toList();
     }
@@ -141,8 +140,6 @@ public class BookingService {
                 booking.getBookingDate(),
                 booking.getStartTime().format(SLOT_FORMATTER) + "-" + booking.getEndTime().format(SLOT_FORMATTER),
                 booking.getStatus(),
-                booking.getTotalMembers(),
-                booking.getMembersJoined(),
                 booking.getCreatedAt());
     }
 }

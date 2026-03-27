@@ -17,7 +17,7 @@ const Bookheader = () => {
             <p className="right-text">Don't be.....lazy, rack up!</p>
         </div>
         <div className="book-bar">
-           <Location setSelectedLocation={setSelectedLocation} />
+            <Location selectedLocation={selectedLocation} setSelectedLocation={setSelectedLocation} />
            <Sports selectedSport={selectedSport} setSelectedSport={setSelectedSport} />
         </div>
         <br/>

@@ -14,11 +14,13 @@
 .create-game-container {
   background-color: white;
   border-radius: 8px;
-  padding: 20px;
+  padding: 0;
   width: 400px;
   max-height: 90vh;
-  overflow-y: auto;
+  overflow: hidden;
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .create-game-container::-webkit-scrollbar {
@@ -29,18 +31,33 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
+  top: 0;
+  z-index: 5;
+  background-color: white;
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .create-game-container .create-game-header h2 {
   margin: 0;
+  font-size: 2rem;
 }
 
 .create-game-container .create-game-close {
   cursor: pointer;
+  position: static;
 }
 
 .create-game-container .create-game-content {
-  margin-top: 20px;
+  margin-top: 0;
+  padding: 14px 20px 10px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.create-game-container .create-game-content::-webkit-scrollbar {
+  width: 8px;
 }
 
 .create-game-container .court-location,
@@ -92,7 +109,9 @@
 
 .create-game-container .create-game-actions {
   text-align: center;
-  margin-top: 10px;
+  margin-top: 0;
+  padding: 10px 20px 20px;
+  background-color: white;
 }
 
 .create-game-container .confirm-button {
