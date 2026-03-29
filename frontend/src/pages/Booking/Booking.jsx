@@ -1,7 +1,5 @@
 import React, {useEffect, useContext } from 'react'
 import Bookheader from '../../components/Bookheader/Bookheader'
-import Bookvenue from '../../components/Bookvenue/Bookvenue'
-import BookingDisplay from '../../components/Bookingdisplay/Bookdisplay'
 import { StoreContext } from '../../context/storeContextInstance'
 const Booking = () => {
   const {setSelectedSport} = useContext(StoreContext)
@@ -17,8 +15,6 @@ const Booking = () => {
   return (
     <div className='booking'>
       <Bookheader/>
-      <Bookvenue/>
-      <BookingDisplay/>
     </div>
   )
 }

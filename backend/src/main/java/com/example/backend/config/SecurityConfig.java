@@ -52,6 +52,7 @@ public class SecurityConfig {
                 .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll()
                         .requestMatchers("/api/venues").permitAll()
                         .requestMatchers("/api/games").permitAll()
+                        .requestMatchers("/api/news").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/facility-manager/**").hasRole("FACILITY_MANAGER")
                         .requestMatchers("/api/player/**").hasRole("PLAYER")

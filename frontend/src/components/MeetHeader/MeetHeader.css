@@ -76,6 +76,37 @@
   background-color: #e0e0e0;
   border-color: #bdbdbd;
 }
+
+.meet-bar .refresh-data-btn {
+  background-color: #fff4e0;
+  border: 1px solid #cb3c0c;
+  color: #8f2a08;
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.meet-bar .refresh-data-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.meet-bar .refresh-data-btn:hover:enabled {
+  background-color: #ffe2c2;
+}
+
+.spin-icon {
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
 .meet-line {
   width:1000px;
   height: 3px;

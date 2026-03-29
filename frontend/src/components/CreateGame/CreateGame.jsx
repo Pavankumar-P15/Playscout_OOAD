@@ -43,7 +43,7 @@ const CreateGame = ({ setShowCreateGame, courtDetails }) => {
         if (response.data.success) {
           toast.success(response.data.message);
           setShowCreateGame(false);
-          await fetchGameList();
+          await fetchGameList({ force: true });
         } else {
           toast.error(response.data.message);
         }

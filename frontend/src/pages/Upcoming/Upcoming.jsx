@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
+import { RefreshCw } from 'lucide-react';
 import './Upcoming.css';
 import { StoreContext } from '../../context/storeContextInstance';
 import { toast } from 'react-toastify';
@@ -10,6 +11,7 @@ const Upcoming = () => {
   const [expandedGameId, setExpandedGameId] = useState('');
   const [expandedJoinedGameId, setExpandedJoinedGameId] = useState('');
   const [requestActionLoadingId, setRequestActionLoadingId] = useState('');
+  const [refreshingPageData, setRefreshingPageData] = useState(false);
   const {
     url,
     fetchGameList,
@@ -63,7 +65,7 @@ const Upcoming = () => {
       if (response?.data?.success) {
         toast.success(response?.data?.message || 'Game cancelled successfully');
         setPlannedGames((prev) => prev.filter((game) => game._id !== gameID));
-        await Promise.all([fetchPlannedGames(), fetchGameList()]);
+        await Promise.all([fetchPlannedGames(), fetchGameList({ force: true })]);
       } else {
         toast.error(response?.data?.message || 'Unable to cancel planned game');
       }
@@ -82,8 +84,8 @@ const Upcoming = () => {
       if (response?.data?.success) {
         toast.success(response.data.message);
         setBookings((prev) => prev.filter((booking) => booking._id !== bookId));
-        fetchBookings();
-        fetchVenueList();
+        await fetchBookings();
+        await fetchVenueList({ force: true });
       } else {
         toast.error('Unable to cancel booking');
       }
@@ -98,7 +100,7 @@ const Upcoming = () => {
       const response = await acceptJoinRequest(requestId);
       if (response?.data?.success) {
         toast.success(response?.data?.message || 'Join request accepted');
-        await Promise.all([fetchJoinRequests(), fetchPlannedGames(), fetchGameList()]);
+        await Promise.all([fetchJoinRequests(), fetchPlannedGames(), fetchGameList({ force: true })]);
       } else {
         toast.error(response?.data?.message || 'Unable to accept request');
       }
@@ -141,6 +143,12 @@ const Upcoming = () => {
     } finally {
       setRequestActionLoadingId('');
     }
+  };
+
+  const handleRefreshUpcoming = async () => {
+    setRefreshingPageData(true);
+    await Promise.all([fetchBookings(), fetchPlannedGames(), fetchJoinRequests()]);
+    setRefreshingPageData(false);
   };
 
   useEffect(() => {
@@ -216,7 +224,18 @@ const Upcoming = () => {
 
   return (
     <div className='upcoming-container'>
-      <h2>Upcoming Games</h2>
+      <div className='upcoming-header'>
+        <h2>Upcoming Games</h2>
+        <button
+          className='upcoming-refresh-btn'
+          onClick={handleRefreshUpcoming}
+          disabled={refreshingPageData}
+          aria-label='Refresh upcoming data'
+          title='Refresh upcoming data'
+        >
+          <RefreshCw size={18} className={refreshingPageData ? 'spin-icon' : ''} />
+        </button>
+      </div>
 
       <div>
         <h3>Booked</h3>
