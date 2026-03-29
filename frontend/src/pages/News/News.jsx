@@ -22,6 +22,9 @@ const News = () => {
     <div className="news-page">
       <h1>What's Trending?</h1>
       <div className="news-list">
+        {newsArticles.length === 0 && (
+          <p className="news-empty">No news articles available right now. Please try again in a bit.</p>
+        )}
         {newsArticles.map((article, index) => (
           <div className="news-item" key={index}>
             <img src={article.image} alt={article.title} />

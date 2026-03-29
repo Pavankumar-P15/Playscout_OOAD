@@ -6,11 +6,15 @@ import Bookvenue from '../Bookvenue/Bookvenue';
 const BookDisplay = ({ selectedSport, selectedLocation }) => {
   const { COURT_list } = useContext(StoreContext);
 
-  const filteredCourts = COURT_list.filter((item) => {
-    const sportMatch = selectedSport === 'Select Sport' || item.sport === selectedSport;
-    const locationMatch = selectedLocation === 'Select Location' || item.courtLocation === selectedLocation;
+  const sportFilter = selectedSport ?? 'Select Sport';
+  const locationFilter = selectedLocation ?? 'Select Location';
 
-    return sportMatch && locationMatch;
+  const filteredCourts = COURT_list.filter((item) => {
+    const sportMatch = sportFilter === 'Select Sport' || sportFilter === 'All' || item.sport === sportFilter;
+    const locationMatch = locationFilter === 'Select Location' || locationFilter === 'All' || item.courtLocation === locationFilter;
+    const hasBookableCourt = item.courtsAvailable > 0;
+
+    return sportMatch && locationMatch && hasBookableCourt;
   });
 
   if (filteredCourts.length === 0) {

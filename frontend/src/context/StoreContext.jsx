@@ -19,6 +19,10 @@ const StoreContextProvider = (props) => {
     
     const url = import.meta.env.VITE_BACKEND_URL;
     const storageBaseUrl = import.meta.env.VITE_SUPABASE_STORAGE_URL;
+    const listCacheTtlSeconds = Number(import.meta.env.VITE_LIST_CACHE_TTL_SECONDS ?? 120);
+    const listCacheTtlMs = Number.isFinite(listCacheTtlSeconds) && listCacheTtlSeconds > 0
+        ? listCacheTtlSeconds * 1000
+        : 0;
     const [token, setToken] = useState(() => getStoredValue("token"));
     const [role, setRole] = useState(() => getStoredValue("role"));
     const [userId, setUserId] = useState(() => getStoredValue("userId"));
@@ -27,24 +31,49 @@ const StoreContextProvider = (props) => {
     // Data lists
     const [COURT_list, setCourtList] = useState([]);
     const [player_list, setPlayerList] = useState([]);
+    const [venueLastFetchedAt, setVenueLastFetchedAt] = useState(0);
+    const [gameLastFetchedAt, setGameLastFetchedAt] = useState(0);
     const [incomingJoinRequests, setIncomingJoinRequests] = useState([]);
     const [sentJoinRequests, setSentJoinRequests] = useState([]);
 
-    const fetchGameList = async () => {
+    const isCacheFresh = (lastFetchedAt) => {
+        if (!lastFetchedAt || listCacheTtlMs <= 0) {
+            return false;
+        }
+        return Date.now() - lastFetchedAt < listCacheTtlMs;
+    };
+
+    const fetchGameList = async ({ force = false } = {}) => {
+        if (!force && player_list.length > 0 && isCacheFresh(gameLastFetchedAt)) {
+            return player_list;
+        }
+
         try {
             const response = await axios.get(url + "/api/games");
-            setPlayerList(response.data.data);
+            const data = response?.data?.data || [];
+            setPlayerList(data);
+            setGameLastFetchedAt(Date.now());
+            return data;
         } catch (error) {
             console.error("Error fetching games:", error);
+            return player_list;
         }
     }
 
-    const fetchVenueList = async () => {
+    const fetchVenueList = async ({ force = false } = {}) => {
+        if (!force && COURT_list.length > 0 && isCacheFresh(venueLastFetchedAt)) {
+            return COURT_list;
+        }
+
         try {
             const response = await axios.get(url + "/api/venues");
-            setCourtList(response.data.data || []);
+            const data = response?.data?.data || [];
+            setCourtList(data);
+            setVenueLastFetchedAt(Date.now());
+            return data;
         } catch (error) {
             console.error("Error fetching venues:", error);
+            return COURT_list;
         }
     }
 
@@ -152,6 +181,8 @@ const StoreContextProvider = (props) => {
         setCourtList,
         player_list,
         setPlayerList,
+        venueLastFetchedAt,
+        gameLastFetchedAt,
         incomingJoinRequests,
         setIncomingJoinRequests,
         sentJoinRequests,

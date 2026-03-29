@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react';
+import { RefreshCw } from 'lucide-react';
 import './Bookheader.css';
 import Location from '../Location/location';
 import Sports from '../Sport/Sport';
@@ -7,8 +8,15 @@ import { StoreContext } from '../../context/storeContextInstance';
 
 
 const Bookheader = () => {
-  const {selectedSport, setSelectedSport} = useContext(StoreContext)
+  const {selectedSport, setSelectedSport, fetchVenueList} = useContext(StoreContext)
   const [selectedLocation, setSelectedLocation] = useState('Select Location');
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    await fetchVenueList({ force: true });
+    setIsRefreshing(false);
+  };
 
   return (
     <div className="book-header">
@@ -19,6 +27,15 @@ const Bookheader = () => {
         <div className="book-bar">
             <Location selectedLocation={selectedLocation} setSelectedLocation={setSelectedLocation} />
            <Sports selectedSport={selectedSport} setSelectedSport={setSelectedSport} />
+             <button
+               className='refresh-data-btn'
+               onClick={handleRefresh}
+               disabled={isRefreshing}
+               aria-label='Refresh venues'
+               title='Refresh venues'
+             >
+               <RefreshCw size={18} className={isRefreshing ? 'spin-icon' : ''} />
+           </button>
         </div>
         <br/>
         <div className="book-line"></div>

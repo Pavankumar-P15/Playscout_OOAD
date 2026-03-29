@@ -3,22 +3,36 @@ import './Chat.css';
 import axios from 'axios';
 import { StoreContext } from '../../context/storeContextInstance';
 import { toast } from 'react-toastify';
-import io from 'socket.io-client';
+import { Client } from '@stomp/stompjs';
+import SockJS from 'sockjs-client/dist/sockjs';
 import { useLocation } from 'react-router-dom';
 
 const Chat = () => {
-  const { url } = useContext(StoreContext);
-  const token = localStorage.getItem('token');
-  const currentUserId = localStorage.getItem("userId");
+  const { url, token, userId: currentUserId, getImageUrl } = useContext(StoreContext);
   const location = useLocation();
   const { recipientId, recipientName, userImage } = location.state || {};
-  const socketRef = useRef(null);
+  const stompClientRef = useRef(null);
 
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState('');
   const messagesEndRef = useRef(null);
+
+  const getAvatarUrl = (imagePath) => {
+    const resolvedPath = imagePath?.trim() ? imagePath : 'avatars/m_avatar2.png';
+    return getImageUrl(resolvedPath);
+  };
+
+  const addMessageIfMissing = (incomingMessage) => {
+    setMessages((prevMessages) => {
+      if (!incomingMessage?._id) {
+        return [...prevMessages, incomingMessage];
+      }
+      const alreadyExists = prevMessages.some((message) => message._id === incomingMessage._id);
+      return alreadyExists ? prevMessages : [...prevMessages, incomingMessage];
+    });
+  };
 
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -59,7 +73,7 @@ const Chat = () => {
             const newUser = {
               _id: recipientId,
               name: recipientName,
-              userImage: userImage || 'm_avatar1.png'
+              userImage: userImage || 'avatars/m_avatar1.png'
             };
             setUsers(prev => [...prev, newUser]);
             setSelectedUser(newUser);
@@ -76,34 +90,74 @@ const Chat = () => {
   }, [url, token, currentUserId, recipientId]);
 
   useEffect(() => {
-    if (currentUserId) {
-      socketRef.current = io(url);
-      socketRef.current.emit("join", { userId: currentUserId });
-
-      socketRef.current.on("receive-message", (newMessage) => {
-        setMessages((prevMessages) => [...prevMessages, newMessage]);
-      });
-
-      socketRef.current.on("message-sent", (sentMessage) => {
-        setMessages((prevMessages) => [...prevMessages, sentMessage]);
-      });
-
-      return () => {
-        socketRef.current.off("receive-message");
-        socketRef.current.off("message-sent");
-        socketRef.current.disconnect();
-      };
+    if (!token || !currentUserId) {
+      return undefined;
     }
-  }, [url, currentUserId]);
 
-  const handleSendMessage = () => {
-    if (!inputText.trim() || !selectedUser || !socketRef.current) return;
-    socketRef.current.emit("send-message", {
-      senderId: currentUserId,
+    const stompClient = new Client({
+      webSocketFactory: () => new SockJS(`${url}/ws`),
+      connectHeaders: {
+        Authorization: `Bearer ${token}`
+      },
+      reconnectDelay: 5000,
+      debug: () => {}
+    });
+
+    stompClient.onConnect = () => {
+      stompClient.subscribe(`/queue/messages.${currentUserId}`, (frame) => {
+        try {
+          const incomingMessage = JSON.parse(frame.body);
+          addMessageIfMissing(incomingMessage);
+        } catch {
+          toast.error('Received invalid message payload');
+        }
+      });
+    };
+
+    stompClient.onWebSocketError = () => {
+      toast.error('Chat connection failed');
+    };
+
+    stompClient.onStompError = () => {
+      toast.error('Chat session error');
+    };
+
+    stompClient.activate();
+    stompClientRef.current = stompClient;
+
+    return () => {
+      stompClient.deactivate();
+      stompClientRef.current = null;
+    };
+  }, [url, token, currentUserId]);
+
+  const handleSendMessage = async () => {
+    if (!inputText.trim() || !selectedUser || !token) return;
+
+    const payload = {
       recipientId: selectedUser._id,
       content: inputText.trim()
-    });
-    setInputText('');
+    };
+
+    try {
+      const client = stompClientRef.current;
+      if (client?.connected) {
+        client.publish({
+          destination: '/app/chat.send',
+          body: JSON.stringify(payload)
+        });
+      } else {
+        const res = await axios.post(`${url}/api/messages`, payload, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (res?.data?.data) {
+          addMessageIfMissing(res.data.data);
+        }
+      }
+      setInputText('');
+    } catch {
+      toast.error('Failed to send message');
+    }
   };
 
   useEffect(() => {
@@ -121,7 +175,7 @@ const Chat = () => {
             onClick={() => setSelectedUser(user)}
           >
             <img
-              src={`${url}/images/${user.userImage}${user.userImage.includes('.') ? '' : '.png'}`}
+              src={getAvatarUrl(user.userImage)}
               className="chat-user-icon"
               alt="User"
             />
@@ -135,7 +189,7 @@ const Chat = () => {
           <>
             <div className="chat-header">
               <img
-                src={`${url}/images/${selectedUser.userImage}${selectedUser.userImage.includes('.') ? '' : '.png'}`}
+                src={getAvatarUrl(selectedUser.userImage)}
                 className="chat-user-icon"
                 alt="User"
               />
