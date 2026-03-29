@@ -6,25 +6,32 @@ import { StoreContext } from '../../context/storeContextInstance';
 import { toast } from 'react-toastify';
 
 const JoinPopup = ({ setShowJoinPopup, recipientId, gameId }) => {
-  const { url } = useContext(StoreContext);
-  const token = localStorage.getItem('token');
+  const { url, token, fetchSentJoinRequests } = useContext(StoreContext);
 
   const handleConfirmJoin = async () => {
     try {
       const response = await axios.post(
         `${url}/api/join-requests`, 
-        { recipientId, gameId}, 
+        { gameId}, 
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
       if (response.data.success) {
         toast.success(response.data.message);
+        await fetchSentJoinRequests();
       } else {
         toast.error(response.data.message);
       }
     } catch (error) {
       console.error("Error sending join request:", error);
-      toast.error("Failed to send join request.");
+      const serverMessage = error?.response?.data?.message;
+
+      if (serverMessage) {
+        toast.error(serverMessage);
+      }
+      else {
+        toast.error("Failed to send join request. Please try again.");
+      }
     }
 
     setShowJoinPopup(false);
