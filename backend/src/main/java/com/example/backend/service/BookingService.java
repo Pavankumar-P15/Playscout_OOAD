@@ -45,6 +45,10 @@ public class BookingService {
         Venue venue = venueRepository.findById(request.getVenueId())
                 .orElseThrow(() -> new IllegalArgumentException("Venue not found"));
 
+        if (Boolean.TRUE.equals(venue.getDisabled())) {
+            throw new IllegalArgumentException("This venue is currently disabled");
+        }
+
         LocalTime[] parsedSlot = parseSlot(request.getSlot());
         LocalTime startTime = parsedSlot[0];
         LocalTime endTime = parsedSlot[1];
@@ -67,9 +71,8 @@ public class BookingService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        return bookingRepository.findByUser_IdOrderByCreatedAtDesc(user.getId())
+        return bookingRepository.findUpcomingBookings(user.getId())
                 .stream()
-            .filter(booking -> booking.getStatus() != BookingStatus.CANCELLED)
                 .map(this::toResponse)
                 .toList();
     }

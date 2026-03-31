@@ -49,4 +49,6 @@ public class Venue {
     @Column(name = "created_by")
     private UUID createdBy;
 
+    @Column(name = "disabled", nullable = false)
+    private Boolean disabled = false;
 }

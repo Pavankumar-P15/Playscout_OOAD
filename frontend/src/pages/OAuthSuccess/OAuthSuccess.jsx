@@ -12,6 +12,13 @@ const OAuthSuccess = () => {
   useEffect(() => {
     const token = searchParams.get('token');
     const userImage = searchParams.get('userImage');
+    const oauthError = searchParams.get('error');
+
+    if (oauthError) {
+      toast.error(oauthError);
+      navigate('/');
+      return;
+    }
 
     if (!token) {
       toast.error('OAuth login failed. No token received.');

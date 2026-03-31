@@ -51,6 +51,13 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             return;
         }
 
+        if (Boolean.TRUE.equals(user.getSuspended())) {
+            String redirectUrl = frontendUrl + "/oauth-success"
+                    + "?error=" + URLEncoder.encode("Account is suspended.", StandardCharsets.UTF_8);
+            response.sendRedirect(redirectUrl);
+            return;
+        }
+
         String token = jwtUtil.generateToken(
                 user.getId(),
                 user.getEmail(),

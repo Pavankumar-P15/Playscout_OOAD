@@ -4,6 +4,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import com.example.backend.repository.UserRepository;
 import java.io.IOException;
 import java.util.List;
 import org.jspecify.annotations.NonNull;
@@ -18,9 +19,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
+    private final UserRepository userRepository;
 
-    public JwtAuthenticationFilter(JwtUtil jwtUtil) {
+    public JwtAuthenticationFilter(JwtUtil jwtUtil, UserRepository userRepository) {
         this.jwtUtil = jwtUtil;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -41,6 +44,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             String email = jwtUtil.extractEmail(token);
             String role = jwtUtil.extractRole(token);
+
+            var user = userRepository.findByEmail(email).orElse(null);
+            if (user == null || Boolean.TRUE.equals(user.getSuspended())) {
+                SecurityContextHolder.clearContext();
+                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Account is suspended");
+                return;
+            }
 
             List<GrantedAuthority> authorities =
                     List.of(new SimpleGrantedAuthority("ROLE_" + role));

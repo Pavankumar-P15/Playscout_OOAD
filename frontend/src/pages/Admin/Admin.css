@@ -1,13 +1,15 @@
 .admin-container {
   padding: 1.5rem;
-  max-width: 65rem;
+  max-width: 90rem;
   margin: 0 auto;
+  margin-bottom: 100px;
 }
 
 .button-group {
   display: flex;
   gap: 1rem;
   margin-bottom: 2rem;
+  flex-wrap: wrap;
 }
 
 .custom-button {
@@ -19,15 +21,19 @@
   color: rgb(225, 14, 59);
   padding: 0.5rem 1rem;
   cursor: pointer;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.custom-button:hover {
+  background-color: rgba(225, 14, 59, 0.1);
 }
 
 .custom-button.active {
   background-color: rgb(225, 14, 59);
   color: white;
-}
-
-.custom-button:hover {
-  background-color: rgba(225, 14, 59, 0.1);
 }
 
 .button-icon {
@@ -38,133 +44,211 @@
 .card {
   border: 1px solid #e2e8f0;
   border-radius: 0.5rem;
-  padding: 1rem;
+  padding: 1.5rem;
   margin-top: 1rem;
+  background-color: #ffffff;
 }
 
 .card-header {
   border-bottom: 1px solid #e2e8f0;
-  padding-bottom: 0.5rem;
-  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .card-title {
   font-size: 1.25rem;
   font-weight: 600;
+  color: #1a202c;
+  margin: 0;
 }
 
 .card-content {
-  padding: 1rem 0;
+  padding: 0;
 }
 
-.venue-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.form-grid {
+/* Dashboard */
+.dashboard-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
 }
 
-.form-group label {
+.stat-card {
+  background: linear-gradient(135deg, rgb(225, 14, 59) 0%, rgba(225, 14, 59, 0.8) 100%);
+  color: white;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  text-align: center;
+}
+
+.stat-card h3 {
   font-size: 0.875rem;
+  font-weight: 500;
+  margin: 0 0 1rem 0;
+  opacity: 0.9;
+}
+
+.stat-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* Tables */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.admin-table thead {
+  background-color: #f7fafc;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.admin-table th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.admin-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.admin-table tbody tr:hover {
+  background-color: #f7fafc;
+}
+
+.admin-table .disabled-row {
+  opacity: 0.6;
+}
+
+.admin-table .cancelled-row {
+  opacity: 0.6;
+  text-decoration: line-through;
+}
+
+/* Status badges */
+.status-active {
+  display: inline-block;
+  background-color: #c6f6d5;
+  color: #22543d;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
   font-weight: 500;
 }
 
-.form-group input {
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #e2e8f0;
+.status-suspended {
+  display: inline-block;
+  background-color: #fed7d7;
+  color: #742a2a;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.status-disabled {
+  display: inline-block;
+  background-color: #fed7d7;
+  color: #742a2a;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.status-cancelled {
+  display: inline-block;
+  background-color: #fed7d7;
+  color: #742a2a;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* Action buttons */
+.action-button {
+  padding: 0.5rem 1rem;
+  border: none;
   border-radius: 0.25rem;
-}
-
-.image-upload-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 18rem;
-  border: 2px dashed #e2e8f0;
-  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.upload-label {
-  cursor: pointer;
-  text-align: center;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.upload-placeholder {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.upload-icon {
-  width: 2rem;
-  height: 2rem;
-  color: #94a3b8;
-}
-
-.submit-button {
-  width: 100%;
+.action-button.suspend {
   background-color: rgb(225, 14, 59);
   color: white;
-  padding: 0.75rem;
-  border: none;
-  cursor: pointer;
 }
 
-.image-preview {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 0.5rem;
+.action-button.suspend:hover {
+  background-color: rgba(225, 14, 59, 0.8);
 }
 
-.venue-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
+.action-button.unsuspend {
+  background-color: #48bb78;
+  color: white;
 }
 
-.venue-table th,
-.venue-table td {
-  padding: 10px;
-  border: 1px solid #ddd;
-  text-align: center;
-  vertical-align: middle;
+.action-button.unsuspend:hover {
+  background-color: #38a169;
 }
 
-.venue-table th {
-  background-color: #f4f4f4;
-  font-weight: bold;
+.action-button.disable {
+  background-color: rgb(225, 14, 59);
+  color: white;
 }
 
-.venue-table .court-image {
-  width: 200px;
-  height: 150px;
-  object-fit: cover;
-  border-radius: 4px;
+.action-button.disable:hover {
+  background-color: rgba(225, 14, 59, 0.8);
 }
 
-.venue-table .remove-icon {
-  cursor: pointer;
-  color: rgb(225, 14, 59);
-  font-weight: bold;
+.action-button.enable {
+  background-color: #48bb78;
+  color: white;
 }
 
-.empty-state {
-  text-align: center;
-  color: #64748b;
-  padding: 2rem 0;
+.action-button.enable:hover {
+  background-color: #38a169;
+}
+
+.action-button.cancel {
+  background-color: rgb(225, 14, 59);
+  color: white;
+}
+
+.action-button.cancel:hover {
+  background-color: rgba(225, 14, 59, 0.8);
+}
+
+@media (max-width: 768px) {
+  .admin-table {
+    font-size: 0.75rem;
+  }
+
+  .admin-table th,
+  .admin-table td {
+    padding: 0.5rem;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .button-group {
+    flex-direction: column;
+  }
+  
+  .custom-button {
+    width: 100%;
+    justify-content: center;
+  }
 }

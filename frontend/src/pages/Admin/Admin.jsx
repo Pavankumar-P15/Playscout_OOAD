@@ -1,130 +1,172 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Plus, List, UploadCloud } from 'lucide-react';
+import { BarChart3, Users, Building2, Gamepad2 } from 'lucide-react';
 import './Admin.css';
 import axios from 'axios';
 import { StoreContext } from '../../context/storeContextInstance';
 import { toast } from 'react-toastify';
 
 const Admin = () => {
-  const { url, token, role, getImageUrl } = useContext(StoreContext);
-  const [showAddForm, setShowAddForm] = useState(false);
+  const { url, token, role } = useContext(StoreContext);
+  const [activeTab, setActiveTab] = useState('dashboard');
+  
+  // Dashboard state
+  const [dashboard, setDashboard] = useState({
+    totalUsers: 0,
+    totalVenues: 0,
+    totalGames: 0,
+    totalBookings: 0
+  });
+
+  // Users state
+  const [users, setUsers] = useState([]);
+  
+  // Venues state
   const [venues, setVenues] = useState([]);
 
-  const [venueData, setVenueData] = useState({
-    courtName: '',
-    sport: '',
-    courtLocation: '',
-    courtsAvailable: '',
-    price: '',
-    courtImage: null
-  });
-  const [imagePreview, setImagePreview] = useState(null);
+// Games state
+  const [games, setGames] = useState([]);
+  
+  const [loading, setLoading] = useState(false);
 
-  const fetchVenues = async () => {
+  // Fetch dashboard stats
+  const fetchDashboard = async () => {
     try {
-      const response = await axios.get(`${url}/api/venues`);
-      setVenues(response?.data?.data || []);
-    } catch (error) {
-      toast.error('Failed to fetch venues.');
-      setVenues([]);
-    }
-  };
-
-  useEffect(() => {
-    fetchVenues();
-  }, [url]);
-
-  useEffect(() => {
-    return () => {
-      if (imagePreview) {
-        URL.revokeObjectURL(imagePreview);
-      }
-    };
-  }, [imagePreview]);
-
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (!file) {
-      return;
-    }
-
-    if (imagePreview) {
-      URL.revokeObjectURL(imagePreview);
-    }
-
-    setImagePreview(URL.createObjectURL(file));
-    setVenueData((prev) => ({ ...prev, courtImage: file }));
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setVenueData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!token) {
-      toast.error('Please login first.');
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('courtName', venueData.courtName);
-    formData.append('sport', venueData.sport);
-    formData.append('courtLocation', venueData.courtLocation);
-    formData.append('courtsAvailable', Number(venueData.courtsAvailable));
-    formData.append('price', Number(venueData.price));
-    formData.append('court-image', venueData.courtImage);
-
-    try {
-      const response = await axios.post(`${url}/api/venues`, formData, {
+      const response = await axios.get(`${url}/api/admin/dashboard`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-
-      if (response?.data?.success) {
-        toast.success(response.data.message || 'Venue added');
-        setVenueData({
-          courtName: '',
-          sport: '',
-          courtLocation: '',
-          courtsAvailable: '',
-          price: '',
-          courtImage: null
-        });
-        setImagePreview(null);
-        fetchVenues();
-      } else {
-        toast.error(response?.data?.message || 'Unable to add venue');
+      if (response.data.success) {
+        setDashboard(response.data.data);
       }
     } catch (error) {
-      toast.error('Venue add endpoint is unavailable or unauthorized.');
+      console.error('Error fetching dashboard:', error);
+      toast.error('Failed to load dashboard');
     }
   };
 
-  const removeVenue = async (venueID) => {
-    if (!token) {
-      toast.error('Please login first.');
-      return;
-    }
-
+  // Fetch users
+  const fetchUsers = async () => {
+    setLoading(true);
     try {
-      const response = await axios.delete(
-        `${url}/api/venues/${venueID}`,
+      const response = await axios.get(`${url}/api/admin/users`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (response.data.success) {
+        setUsers(response.data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      toast.error('Failed to load users');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch venues
+  const fetchVenues = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${url}/api/admin/venues`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (response.data.success) {
+        setVenues(response.data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching venues:', error);
+      toast.error('Failed to load venues');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch games
+  const fetchGames = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${url}/api/admin/games?limit=20`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (response.data.success) {
+        setGames(response.data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching games:', error);
+      toast.error('Failed to load games');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Suspend user
+  const handleSuspendUser = async (userId) => {
+    try {
+      const response = await axios.patch(
+        `${url}/api/admin/users/${userId}/suspend`,
+        {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
-
-      if (response?.data?.success) {
-        toast.success(response.data.message || 'Venue removed');
-        fetchVenues();
-      } else {
-        toast.error(response?.data?.message || 'Unable to remove venue');
+      if (response.data.success) {
+        toast.success('User suspension status updated');
+        fetchUsers();
       }
     } catch (error) {
-      toast.error('Venue remove endpoint is unavailable or unauthorized.');
+      toast.error('Failed to update user');
     }
   };
 
+  // Disable venue
+  const handleDisableVenue = async (venueId) => {
+    try {
+      const response = await axios.patch(
+        `${url}/api/admin/venues/${venueId}/disable`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (response.data.success) {
+        toast.success('Venue status updated');
+        fetchVenues();
+      }
+    } catch (error) {
+      toast.error('Failed to update venue');
+    }
+  };
+
+  // Cancel game
+  const handleCancelGame = async (gameId) => {
+    if (!window.confirm('Are you sure you want to cancel this game?')) {
+      return;
+    }
+    try {
+      const response = await axios.patch(
+        `${url}/api/admin/games/${gameId}/cancel`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (response.data.success) {
+        toast.success('Game cancelled successfully');
+        fetchGames();
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to cancel game');
+    }
+  };
+
+  // Load data on tab change
+  useEffect(() => {
+    if (!token || role !== 'ADMIN') return;
+
+    if (activeTab === 'dashboard') {
+      fetchDashboard();
+    } else if (activeTab === 'users') {
+      fetchUsers();
+    } else if (activeTab === 'venues') {
+      fetchVenues();
+    } else if (activeTab === 'games') {
+      fetchGames();
+    }
+  }, [activeTab, token, role, url]);
+
+  // Check admin access
   if (!token || role !== 'ADMIN') {
     return (
       <div className='admin-container'>
@@ -133,7 +175,7 @@ const Admin = () => {
             <h2 className='card-title'>Admin Access Required</h2>
           </div>
           <div className='card-content'>
-            <p>You need an admin account to access this page.</p>
+            <p>You need admin privileges to access this page.</p>
           </div>
         </div>
       </div>
@@ -142,133 +184,216 @@ const Admin = () => {
 
   return (
     <div className='admin-container'>
+      {/* Tab Navigation */}
       <div className='button-group'>
-        <button onClick={() => setShowAddForm(false)} className={`custom-button ${!showAddForm ? 'active' : ''}`}>
-          <List className='button-icon' />
-          List Venues
+        <button 
+          onClick={() => setActiveTab('dashboard')} 
+          className={`custom-button ${activeTab === 'dashboard' ? 'active' : ''}`}
+        >
+          <BarChart3 className='button-icon' />
+          Dashboard
         </button>
-        <button onClick={() => setShowAddForm(true)} className={`custom-button ${showAddForm ? 'active' : ''}`}>
-          <Plus className='button-icon' />
-          Add Venue
+        <button 
+          onClick={() => setActiveTab('users')} 
+          className={`custom-button ${activeTab === 'users' ? 'active' : ''}`}
+        >
+          <Users className='button-icon' />
+          Users
+        </button>
+        <button 
+          onClick={() => setActiveTab('venues')} 
+          className={`custom-button ${activeTab === 'venues' ? 'active' : ''}`}
+        >
+          <Building2 className='button-icon' />
+          Venues
+        </button>
+        <button 
+          onClick={() => setActiveTab('games')} 
+          className={`custom-button ${activeTab === 'games' ? 'active' : ''}`}
+        >
+          <Gamepad2 className='button-icon' />
+          Games
         </button>
       </div>
 
-      {showAddForm ? (
-        <div className='card'>
-          <div className='card-header'>
-            <h2 className='card-title'>Add New Venue</h2>
+      {/* Dashboard Tab */}
+      {activeTab === 'dashboard' && (
+        <div className='dashboard-grid'>
+          <div className='stat-card'>
+            <h3>Total Users</h3>
+            <p className='stat-value'>{dashboard.totalUsers}</p>
           </div>
-          <div className='card-content'>
-            <form onSubmit={handleSubmit} className='venue-form'>
-              <div className='form-grid'>
-                <div className='form-group'>
-                  <label>Court Name</label>
-                  <input name='courtName' value={venueData.courtName} onChange={handleInputChange} required className='input-court' />
-                </div>
-                <div className='form-group'>
-                  <label>Sport</label>
-                  <input name='sport' value={venueData.sport} onChange={handleInputChange} required className='input' />
-                </div>
-              </div>
-
-              <div className='form-group'>
-                <label>Court Location</label>
-                <input name='courtLocation' value={venueData.courtLocation} onChange={handleInputChange} required className='input' />
-              </div>
-
-              <div className='form-grid'>
-                <div className='form-group'>
-                  <label>Courts Available</label>
-                  <input
-                    type='number'
-                    name='courtsAvailable'
-                    value={venueData.courtsAvailable}
-                    onChange={handleInputChange}
-                    min='1'
-                    required
-                    className='input'
-                  />
-                </div>
-                <div className='form-group'>
-                  <label>Price/hr</label>
-                  <input
-                    type='number'
-                    name='price'
-                    value={venueData.price}
-                    onChange={handleInputChange}
-                    min='0'
-                    required
-                    className='input'
-                  />
-                </div>
-              </div>
-
-              <div className='form-group'>
-                <label>Court Image</label>
-                <div className='image-upload-container'>
-                  <input type='file' accept='image/*' onChange={handleImageUpload} className='hidden' id='court-image-upload' required />
-                  <label htmlFor='court-image-upload' className='upload-label'>
-                    {imagePreview ? (
-                      <img src={imagePreview} alt='Preview' className='image-preview' />
-                    ) : (
-                      <div className='upload-placeholder'>
-                        <UploadCloud className='upload-icon' />
-                        <span>Upload court image</span>
-                      </div>
-                    )}
-                  </label>
-                </div>
-              </div>
-
-              <button type='submit' className='submit-button'>
-                Add Venue
-              </button>
-            </form>
+          <div className='stat-card'>
+            <h3>Total Venues</h3>
+            <p className='stat-value'>{dashboard.totalVenues}</p>
+          </div>
+          <div className='stat-card'>
+            <h3>Total Games</h3>
+            <p className='stat-value'>{dashboard.totalGames}</p>
+          </div>
+          <div className='stat-card'>
+            <h3>Total Bookings</h3>
+            <p className='stat-value'>{dashboard.totalBookings}</p>
           </div>
         </div>
-      ) : (
+      )}
+
+      {/* Users Tab */}
+      {activeTab === 'users' && (
         <div className='card'>
           <div className='card-header'>
-            <h2 className='card-title'>Venue List</h2>
+            <h2 className='card-title'>User Management</h2>
           </div>
           <div className='card-content'>
-            {venues.length > 0 ? (
-              <table className='venue-table'>
+            {loading ? (
+              <p>Loading users...</p>
+            ) : users.length > 0 ? (
+              <table className='admin-table'>
                 <thead>
                   <tr>
-                    <th>Court Name</th>
-                    <th>Sport</th>
-                    <th>Location</th>
-                    <th>Courts Available</th>
-                    <th>Price/hr</th>
-                    <th>Rating</th>
-                    <th>Image</th>
-                    <th>Remove</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {venues.map((venue) => (
-                    <tr key={venue._id || venue.id}>
-                      <td>{venue.courtName}</td>
-                      <td>{venue.sport}</td>
-                      <td>{venue.courtLocation}</td>
-                      <td>{venue.courtsAvailable}</td>
-                      <td>{venue.price}</td>
-                      <td>{venue.rating}</td>
+                  {users.map((user) => (
+                    <tr key={user.id}>
+                      <td>{user.name}</td>
+                      <td>{user.email}</td>
+                      <td>{user.role}</td>
                       <td>
-                        <img src={getImageUrl(venue.courtImage)} alt='Court' className='court-image' />
+                        <span className={user.suspended ? 'status-suspended' : 'status-active'}>
+                          {user.suspended ? 'Suspended' : 'Active'}
+                        </span>
                       </td>
                       <td>
-                        <p onClick={() => removeVenue(venue._id || venue.id)} className='remove-icon'>
-                          x
-                        </p>
+                        <button 
+                          className={`action-button ${user.suspended ? 'unsuspend' : 'suspend'}`}
+                          onClick={() => handleSuspendUser(user.id)}
+                        >
+                          {user.suspended ? 'Unsuspend' : 'Suspend'}
+                        </button>
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             ) : (
-              <div className='empty-state'>No venues added yet</div>
+              <p>No users found</p>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Venues Tab */}
+      {activeTab === 'venues' && (
+        <div className='card'>
+          <div className='card-header'>
+            <h2 className='card-title'>Venue Management</h2>
+          </div>
+          <div className='card-content'>
+            {loading ? (
+              <p>Loading venues...</p>
+            ) : venues.length > 0 ? (
+              <table className='admin-table'>
+                <thead>
+                  <tr>
+                    <th>Court Name</th>
+                    <th>Sport</th>
+                    <th>Location</th>
+                    <th>Manager</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {venues.map((venue) => (
+                    <tr key={venue.id} className={venue.disabled ? 'disabled-row' : ''}>
+                      <td>{venue.courtName}</td>
+                      <td>{venue.sport}</td>
+                      <td>{venue.courtLocation}</td>
+                      <td>{venue.managerName || 'Unknown'}</td>
+                      <td>
+                        <span className={venue.disabled ? 'status-disabled' : 'status-active'}>
+                          {venue.disabled ? 'Disabled' : 'Active'}
+                        </span>
+                      </td>
+                      <td>
+                        <button 
+                          className={`action-button ${venue.disabled ? 'enable' : 'disable'}`}
+                          onClick={() => handleDisableVenue(venue.id)}
+                        >
+                          {venue.disabled ? 'Enable' : 'Disable'}
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p>No venues found</p>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Games Tab */}
+      {activeTab === 'games' && (
+        <div className='card'>
+          <div className='card-header'>
+            <h2 className='card-title'>Recent Games</h2>
+          </div>
+          <div className='card-content'>
+            {loading ? (
+              <p>Loading games...</p>
+            ) : games.length > 0 ? (
+              <table className='admin-table'>
+                <thead>
+                  <tr>
+                    <th>Court</th>
+                    <th>Sport</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Creator</th>
+                    <th>Members</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {games.map((game) => (
+                    <tr key={game.id} className={game.status === 'CANCELLED' ? 'cancelled-row' : ''}>
+                      <td>{game.courtName}</td>
+                      <td>{game.sport}</td>
+                      <td>{game.date}</td>
+                      <td>{game.startTime} - {game.endTime}</td>
+                      <td>{game.creatorName}</td>
+                      <td>{game.membersJoined}/{game.totalMembers}</td>
+                      <td>
+                        <span className={`status-${game.status.toLowerCase()}`}>
+                          {game.status}
+                        </span>
+                      </td>
+                      <td>
+                        {game.status !== 'CANCELLED' && (
+                          <button 
+                            className='action-button cancel'
+                            onClick={() => handleCancelGame(game.id)}
+                          >
+                            Cancel
+                          </button>
+                        )}
+                        {game.status === 'CANCELLED' && <span>—</span>}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p>No games found</p>
             )}
           </div>
         </div>

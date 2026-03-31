@@ -41,4 +41,7 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @Column(name = "suspended", nullable = false)
+    private Boolean suspended = false;
 }

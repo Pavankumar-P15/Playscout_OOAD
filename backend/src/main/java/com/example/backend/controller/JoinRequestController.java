@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +33,7 @@ public class JoinRequestController {
     private final JoinRequestService joinRequestService;
     
     @PostMapping
+    @PreAuthorize("hasRole('PLAYER')")
     public ResponseEntity<Map<String, Object>> createJoinRequest(
         Authentication authentication,
         @RequestBody CreateJoinRequestRequest request) {
@@ -46,6 +48,7 @@ public class JoinRequestController {
         }
 
     @GetMapping("/incoming")
+    @PreAuthorize("hasRole('PLAYER')")
     public ResponseEntity<Map<String, Object>> getIncomingRequests(
             Authentication authentication,
             @RequestParam(required = false) JoinRequestStatus status) {
@@ -58,6 +61,7 @@ public class JoinRequestController {
     }
 
     @GetMapping("/sent")
+    @PreAuthorize("hasRole('PLAYER')")
     public ResponseEntity<Map<String, Object>> getSentRequests(
             Authentication authentication,
             @RequestParam(required = false) JoinRequestStatus status) {
@@ -70,6 +74,7 @@ public class JoinRequestController {
     }
 
     @PatchMapping("/{id}/accept")
+    @PreAuthorize("hasRole('PLAYER')")
     public ResponseEntity<Map<String, Object>> acceptRequest(
             Authentication authentication,
             @PathVariable UUID id) {
@@ -82,6 +87,7 @@ public class JoinRequestController {
     }
 
     @PatchMapping("/{id}/reject")
+    @PreAuthorize("hasRole('PLAYER')")
     public ResponseEntity<Map<String, Object>> rejectRequest(
             Authentication authentication,
             @PathVariable UUID id) {
@@ -94,6 +100,7 @@ public class JoinRequestController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('PLAYER')")
     public ResponseEntity<Map<String, Object>> cancelSentRequest(
             Authentication authentication,
             @PathVariable UUID id) {

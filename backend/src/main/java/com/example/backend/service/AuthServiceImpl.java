@@ -37,6 +37,10 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new AuthException("User not found"));
 
+        if (Boolean.TRUE.equals(user.getSuspended())) {
+            throw new AuthException("Your account is suspended.");
+        }
+
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new AuthException("Invalid password");
         }
@@ -61,6 +65,7 @@ public class AuthServiceImpl implements AuthService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setUserImage(resolveUserImage(request));
         user.setRole(role);
+        user.setSuspended(false);
 
         userRepository.save(user);
 

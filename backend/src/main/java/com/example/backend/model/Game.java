@@ -57,4 +57,6 @@ public class Game {
     @Column(name = "skill_level")
     private String skillLevel;
 
+    @Column(name = "status", nullable = false)
+    private String status = "ACTIVE";
 }

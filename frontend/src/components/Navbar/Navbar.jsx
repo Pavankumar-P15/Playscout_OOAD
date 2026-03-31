@@ -3,7 +3,7 @@ import './Navbar.css'
 import { assets } from '../../assets/assets'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { StoreContext } from '../../context/storeContextInstance'
-import { Shield, ClipboardPen, User } from 'lucide-react';
+import { Building2, ClipboardPen, User, Shield } from 'lucide-react';
 import {toast} from "react-toastify"
 
 const Navbar = ({setShowLogin}) => {
@@ -11,6 +11,7 @@ const Navbar = ({setShowLogin}) => {
   const { menu, setMenu, token, setToken, role, setRole, userImage, getImageUrl } = useContext(StoreContext)
   const location = useLocation();
   const navigate = useNavigate();
+  const isFacilityManager = role === 'FACILITY_MANAGER';
   const isAdmin = role === 'ADMIN';
 
   const logout = () => {
@@ -59,16 +60,24 @@ const Navbar = ({setShowLogin}) => {
             <ul className='navbar-profile-dropdown'>
               <Link to='/profile'><li><User style={{ color: 'red', paddingBottom: '10px', paddingRight: '6px'}} size={26} /><p style={{ paddingRight: '10px'}}>Profile</p></li></Link>
               <hr />
-              <Link to='/upcoming'><li><ClipboardPen style={{ color: 'red', paddingBottom: '10px', paddingRight: '6px'}} size={26} /><p style={{ paddingRight: '10px'}}>Upcoming</p></li></Link>
-              <hr />
-              {isAdmin ? (
+              {!isFacilityManager && <Link to='/upcoming'><li><ClipboardPen style={{ color: 'red', paddingBottom: '10px', paddingRight: '6px'}} size={26} /><p style={{ paddingRight: '10px'}}>Upcoming</p></li></Link>}
+              {!isFacilityManager && <hr />}
+              {isFacilityManager && (
                 <>
-                <Link to="/admin">
-                  <li><Shield style={{ color: 'red', paddingBottom: '10px', paddingRight: '6px'}} size={26} /><p>Admin</p></li>
+                <Link to="/facility-management">
+                  <li><Building2 style={{ color: 'red', paddingBottom: '10px', paddingRight: '6px'}} size={26} /><p>Facility Management</p></li>
                 </Link>
                 <hr />
                 </>
-              ) : <></>}
+              )}
+              {isAdmin && (
+                <>
+                <Link to="/admin">
+                  <li><Shield style={{ color: 'red', paddingBottom: '10px', paddingRight: '6px'}} size={26} /><p>Admin Panel</p></li>
+                </Link>
+                <hr />
+                </>
+              )}
               <li onClick={logout}><img src={assets.logout_icon} alt="" /><p style={{ paddingLeft: '5px'}}>Logout</p></li>
               <hr />
             </ul>
