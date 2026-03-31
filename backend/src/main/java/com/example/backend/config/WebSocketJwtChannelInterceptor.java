@@ -14,6 +14,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import com.example.backend.repository.UserRepository;
 import com.example.backend.security.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 public class WebSocketJwtChannelInterceptor implements ChannelInterceptor {
 
     private final JwtUtil jwtUtil;
+    private final UserRepository userRepository;
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
@@ -44,6 +46,11 @@ public class WebSocketJwtChannelInterceptor implements ChannelInterceptor {
 
             String email = jwtUtil.extractEmail(token);
             String role = jwtUtil.extractRole(token);
+
+            var user = userRepository.findByEmail(email).orElse(null);
+            if (user == null || Boolean.TRUE.equals(user.getSuspended())) {
+                throw new IllegalArgumentException("Account is suspended");
+            }
 
             List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + role));
             Principal principal = new UsernamePasswordAuthenticationToken(email, null, authorities);

@@ -1,5 +1,6 @@
 package com.example.backend.service;
 
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
@@ -79,25 +80,35 @@ public class JoinRequestService {
     public List<JoinRequestResponse> getIncomingRequests(String email, JoinRequestStatus status) {
         User user = getUserByEmail(email);
 
-        List<JoinRequest> joinRequests = status == null
-                ? joinRequestRepository.findByRecipientId_IdOrderByCreatedAtDesc(user.getId())
-                : joinRequestRepository.findByRecipientId_IdAndStatusOrderByCreatedAtDesc(user.getId(), status);
-
-        return joinRequests.stream()
-                .map(this::toResponse)
-                .toList();
+        if (status == null) {
+            return joinRequestRepository.findIncomingRequestsForUpcomingGames(user.getId())
+                    .stream()
+                    .map(this::toResponse)
+                    .toList();
+        } else {
+            return joinRequestRepository.findByRecipientId_IdAndStatusOrderByCreatedAtDesc(user.getId(), status)
+                    .stream()
+                    .filter(jr -> jr.getGameId().getDate().isAfter(LocalDate.now()) || jr.getGameId().getDate().isEqual(LocalDate.now()))
+                    .map(this::toResponse)
+                    .toList();
+        }
     }
 
     public List<JoinRequestResponse> getSentRequests(String email, JoinRequestStatus status) {
         User user = getUserByEmail(email);
 
-        List<JoinRequest> joinRequests = status == null
-                ? joinRequestRepository.findBySenderId_IdOrderByCreatedAtDesc(user.getId())
-                : joinRequestRepository.findBySenderId_IdAndStatusOrderByCreatedAtDesc(user.getId(), status);
-
-        return joinRequests.stream()
-                .map(this::toResponse)
-                .toList();
+        if (status == null) {
+            return joinRequestRepository.findSentRequestsForUpcomingGames(user.getId())
+                    .stream()
+                    .map(this::toResponse)
+                    .toList();
+        } else {
+            return joinRequestRepository.findBySenderId_IdAndStatusOrderByCreatedAtDesc(user.getId(), status)
+                    .stream()
+                    .filter(jr -> jr.getGameId().getDate().isAfter(LocalDate.now()) || jr.getGameId().getDate().isEqual(LocalDate.now()))
+                    .map(this::toResponse)
+                    .toList();
+        }
     }
 
     @Transactional

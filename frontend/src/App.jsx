@@ -13,10 +13,11 @@ import News from './pages/News/News';
 import LoginPopup from './components/LoginPopup/LoginPopup';
 import Privacy from './pages/Privacy/Privacy';
 import Upcoming from './pages/Upcoming/Upcoming';
-import Admin from './pages/Admin/Admin';
+import FacilityManagement from './pages/FacilityManagement/FacilityManagement';
 import OAuthSuccess from './pages/OAuthSuccess/OAuthSuccess';
 import CompleteProfile from './pages/CompleteProfile/CompleteProfile';
 import Profile from './pages/Profile/Profile';
+import Admin from './pages/Admin/Admin';
 
 const App = () => {
   const [showLogin, setShowLogin] = useState(false);
@@ -36,6 +37,7 @@ const App = () => {
           <Route path='/news' element={<News />} />
           <Route path='/privacy-policy' element={<Privacy />} />
           <Route path='/upcoming' element={<Upcoming />} />
+          <Route path='/facility-management' element={<FacilityManagement />} />
           <Route path='/admin' element={<Admin />} />
           <Route path='/profile' element={<Profile />} />
           <Route path='/oauth-success' element={<OAuthSuccess />} />

@@ -28,7 +28,7 @@ public class GameService {
     private final VenueRepository venueRepository;
 
     public List<GameResponse> getGameList() {
-        return gameRepository.findAll()
+        return gameRepository.findUpcomingGames()
                 .stream()
                 .map(this::toResponse)
                 .toList();
@@ -38,7 +38,7 @@ public class GameService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        return gameRepository.findByCreatedBy_IdOrderByDateDesc(user.getId())
+        return gameRepository.findUpcomingGamesByUserId(user.getId())
                 .stream()
                 .map(this::toResponse)
                 .toList();
@@ -72,6 +72,10 @@ public class GameService {
 
         Venue venue = venueRepository.findById(request.getVenueId())
                 .orElseThrow(() -> new IllegalArgumentException("Venue not found"));
+
+        if (Boolean.TRUE.equals(venue.getDisabled())) {
+            throw new IllegalArgumentException("This venue is currently disabled");
+        }
 
         LocalTime[] parsedSlot = parseSlot(request.getSlot());
         LocalTime startTime = parsedSlot[0];
@@ -126,7 +130,7 @@ public class GameService {
     }
 
     private void ensureNoSlotConflict(UUID venueId, LocalDate gameDate, LocalTime startTime, LocalTime endTime) {
-        List<Game> games = gameRepository.findByVenue_IdAndDate(venueId, gameDate);
+        List<Game> games = gameRepository.findActiveByVenueIdAndDate(venueId, gameDate);
 
         boolean hasConflict = games.stream()
                 .anyMatch(existing -> {

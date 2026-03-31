@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +34,7 @@ public class GameController {
     }
 
     @GetMapping("/me")
+    @PreAuthorize("hasRole('PLAYER')")
     public ResponseEntity<Map<String, Object>> getMyGameList(Authentication authentication) {
         try {
             return ResponseEntity.ok(Map.of(
@@ -45,6 +47,7 @@ public class GameController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('PLAYER')")
     public ResponseEntity<Map<String, Object>> createGame(
             Authentication authentication,
             @RequestBody CreateGameRequest request) {
@@ -59,6 +62,7 @@ public class GameController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('PLAYER')")
     public ResponseEntity<Map<String, Object>> removeGame(
             Authentication authentication,
             @PathVariable UUID id) {

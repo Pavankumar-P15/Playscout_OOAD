@@ -17,9 +17,9 @@ const Bookpop = ({ setShowBooking, courtDetails }) => {
 
   const today = new Date();
   const availableDates = [
-    today,
     new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1),
-    new Date(today.getFullYear(), today.getMonth(), today.getDate() + 2)
+    new Date(today.getFullYear(), today.getMonth(), today.getDate() + 2),
+    new Date(today.getFullYear(), today.getMonth(), today.getDate() + 3)
   ];
 
   const handleConfirmBooking = async () => {
@@ -37,6 +37,7 @@ const Bookpop = ({ setShowBooking, courtDetails }) => {
         if (response.data.success) {
           console.log("Booking confirmed and saved to database.");
           toast.success(response.data.message);
+          console.log(`Booking confirmed for ${courtName} on ${selectedDate.toLocaleDateString()} at ${selectedSlot}`);
           setShowBooking(false);
         } else {
           console.error("Booking failed.");
@@ -44,9 +45,8 @@ const Bookpop = ({ setShowBooking, courtDetails }) => {
         }
       } catch (error) {
         console.error("Error saving booking:", error);
+        toast.error(error.response?.data?.message || "Failed to confirm booking. Please try again.");
       }
-      console.log(`Booking confirmed for ${courtName} on ${selectedDate.toLocaleDateString()} at ${selectedSlot}`);
-      setShowBooking(false);
     } else {
       alert("Please select both a date and a time slot before confirming the booking.");
     }

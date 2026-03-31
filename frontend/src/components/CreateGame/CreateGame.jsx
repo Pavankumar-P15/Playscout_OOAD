@@ -20,9 +20,9 @@ const CreateGame = ({ setShowCreateGame, courtDetails }) => {
 
   const today = new Date();
   const availableDates = [
-    today,
     new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1),
-    new Date(today.getFullYear(), today.getMonth(), today.getDate() + 2)
+    new Date(today.getFullYear(), today.getMonth(), today.getDate() + 2),
+    new Date(today.getFullYear(), today.getMonth(), today.getDate() + 3)
   ];
 
   const handleCreateGame = async () => {
@@ -49,7 +49,12 @@ const CreateGame = ({ setShowCreateGame, courtDetails }) => {
         }
       } catch (error) {
         console.error("Error creating game:", error);
-        toast.error("An error occurred while creating the game.");
+        const serverMessage = error?.response?.data?.message;
+        if (serverMessage) {
+          toast.error(serverMessage);
+        } else {
+          toast.error("An error occurred while creating the game.");
+        }
       }
     } else {
       alert("Please fill in all the details before creating the game.");
