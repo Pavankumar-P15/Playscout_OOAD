@@ -18,6 +18,9 @@ import OAuthSuccess from './pages/OAuthSuccess/OAuthSuccess';
 import CompleteProfile from './pages/CompleteProfile/CompleteProfile';
 import Profile from './pages/Profile/Profile';
 import Admin from './pages/Admin/Admin';
+import PaymentSuccess from './pages/PaymentSuccess/PaymentSuccess';
+import PaymentCancel from './pages/PaymentCancel/PaymentCancel';
+import PaymentHistory from './pages/PaymentHistory/PaymentHistory';
 
 const App = () => {
   const [showLogin, setShowLogin] = useState(false);
@@ -42,6 +45,9 @@ const App = () => {
           <Route path='/profile' element={<Profile />} />
           <Route path='/oauth-success' element={<OAuthSuccess />} />
           <Route path='/complete-profile' element={<CompleteProfile />} />
+          <Route path='/payment-success' element={<PaymentSuccess />} />
+          <Route path='/payment-cancel' element={<PaymentCancel />} />
+          <Route path='/payment-history' element={<PaymentHistory />} />
         </Routes>
         <Footer />
       </div>

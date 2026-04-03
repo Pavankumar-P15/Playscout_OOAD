@@ -1,17 +1,10 @@
 package com.example.backend.service;
 
-import com.example.backend.dto.CreateVenueRequest;
-import com.example.backend.dto.VenueResponse;
-import com.example.backend.enums.Role;
-import com.example.backend.model.User;
-import com.example.backend.model.Venue;
-import com.example.backend.repository.UserRepository;
-import com.example.backend.repository.VenueRepository;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
-import lombok.RequiredArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -19,6 +12,16 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.example.backend.dto.CreateVenueRequest;
+import com.example.backend.dto.VenueResponse;
+import com.example.backend.enums.Role;
+import com.example.backend.model.User;
+import com.example.backend.model.Venue;
+import com.example.backend.repository.UserRepository;
+import com.example.backend.repository.VenueRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -167,7 +170,6 @@ public class VenueService {
 
             restTemplate.exchange(deleteUrl, HttpMethod.DELETE, entity, Void.class);
         } catch (Exception ex) {
-            // Log but don't fail the deletion to avoid cascading errors
             System.err.println("Failed to delete image from Supabase: " + ex.getMessage());
         }
     }

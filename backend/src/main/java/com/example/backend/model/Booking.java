@@ -1,11 +1,10 @@
 package com.example.backend.model;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.UUID;
-
 import com.example.backend.enums.BookingStatus;
+import com.example.backend.enums.RefundStatus;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,137 +13,143 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Table(name = "bookings")
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public class Booking {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(nullable = false, updatable = false)
     private UUID id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(name = "user_id", nullable = false)
+    private UUID userId;
 
-    @ManyToOne
-    @JoinColumn(name = "venue_id", nullable = false)
-    private Venue venue;
+    @Column(name = "venue_id", nullable = false)
+    private UUID venueId;
 
-    @Column(name = "booking_date")
-    private LocalDate bookingDate;
+    @Column(nullable = false)
+    private String courtName;
 
-    @Column(name = "start_time")
+    @Column(nullable = false)
+    private String courtLocation;
+
+    @Column(nullable = false)
+    private String sport;
+
+    @Column(nullable = true)
+    private String courtImage;
+
+    @Column(nullable = false)
+    private Integer price;
+
+    @Column(nullable = false)
+    private String bookingDate;
+
+    @Column(nullable = false)
+    private String bookingSlot;
+
+    @Column(name = "start_time", nullable = false)
     private LocalTime startTime;
 
-    @Column(name = "end_time")
+    @Column(name = "end_time", nullable = false)
     private LocalTime endTime;
+
+    @Column(nullable = false)
+    private Integer membersJoined;
+
+    @Column(nullable = false)
+    private Integer totalMembers;
 
     @Enumerated(EnumType.STRING)
     private BookingStatus status = BookingStatus.PENDING;
 
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
+    @Enumerated(EnumType.STRING)
+    private RefundStatus refundStatus = RefundStatus.NONE;
 
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    @Column(name = "order_id")
+    private String orderId;
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
+    @Column(name = "payment_intent_id")
+    private String paymentIntentId;
 
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
+    @Column(name = "refund_id")
+    private String refundId;
 
-    public static BookingBuilder builder() {
-        return new BookingBuilder();
-    }
+    @Column(name = "refund_requested_at")
+    private OffsetDateTime refundRequestedAt;
 
-    public static class BookingBuilder {
-        private UUID id;
-        private User user;
-        private Venue venue;
-        private LocalDate bookingDate;
-        private LocalTime startTime;
-        private LocalTime endTime;
-        private BookingStatus status = BookingStatus.PENDING;
-        private LocalDateTime createdAt;
-        private LocalDateTime updatedAt;
+    @Column(name = "refund_processed_at")
+    private OffsetDateTime refundProcessedAt;
 
-        public BookingBuilder id(UUID id) {
-            this.id = id;
-            return this;
-        }
+    @Column(nullable = false)
+    private OffsetDateTime createdAt = OffsetDateTime.now();
 
-        public BookingBuilder user(User user) {
-            this.user = user;
-            return this;
-        }
+    public UUID getId() { return id; }
+    public void setId(UUID id) { this.id = id; }
 
-        public BookingBuilder venue(Venue venue) {
-            this.venue = venue;
-            return this;
-        }
+    public UUID getUserId() { return userId; }
+    public void setUserId(UUID userId) { this.userId = userId; }
 
-        public BookingBuilder bookingDate(LocalDate bookingDate) {
-            this.bookingDate = bookingDate;
-            return this;
-        }
+    public UUID getVenueId() { return venueId; }
+    public void setVenueId(UUID venueId) { this.venueId = venueId; }
 
-        public BookingBuilder startTime(LocalTime startTime) {
-            this.startTime = startTime;
-            return this;
-        }
+    public String getCourtName() { return courtName; }
+    public void setCourtName(String courtName) { this.courtName = courtName; }
 
-        public BookingBuilder endTime(LocalTime endTime) {
-            this.endTime = endTime;
-            return this;
-        }
+    public String getCourtLocation() { return courtLocation; }
+    public void setCourtLocation(String courtLocation) { this.courtLocation = courtLocation; }
 
-        public BookingBuilder status(BookingStatus status) {
-            this.status = status;
-            return this;
-        }
+    public String getSport() { return sport; }
+    public void setSport(String sport) { this.sport = sport; }
 
-        public BookingBuilder createdAt(LocalDateTime createdAt) {
-            this.createdAt = createdAt;
-            return this;
-        }
+    public String getCourtImage() { return courtImage; }
+    public void setCourtImage(String courtImage) { this.courtImage = courtImage; }
 
-        public BookingBuilder updatedAt(LocalDateTime updatedAt) {
-            this.updatedAt = updatedAt;
-            return this;
-        }
+    public Integer getPrice() { return price; }
+    public void setPrice(Integer price) { this.price = price; }
 
-        public Booking build() {
-            Booking booking = new Booking();
-            booking.id = this.id;
-            booking.user = this.user;
-            booking.venue = this.venue;
-            booking.bookingDate = this.bookingDate;
-            booking.startTime = this.startTime;
-            booking.endTime = this.endTime;
-            booking.status = this.status;
-            booking.createdAt = this.createdAt;
-            booking.updatedAt = this.updatedAt;
-            return booking;
-        }
-    }
+    public String getBookingDate() { return bookingDate; }
+    public void setBookingDate(String bookingDate) { this.bookingDate = bookingDate; }
+
+    public String getBookingSlot() { return bookingSlot; }
+    public void setBookingSlot(String bookingSlot) { this.bookingSlot = bookingSlot; }
+
+    public LocalTime getStartTime() { return startTime; }
+    public void setStartTime(LocalTime startTime) { this.startTime = startTime; }
+
+    public LocalTime getEndTime() { return endTime; }
+    public void setEndTime(LocalTime endTime) { this.endTime = endTime; }
+
+    public Integer getMembersJoined() { return membersJoined; }
+    public void setMembersJoined(Integer membersJoined) { this.membersJoined = membersJoined; }
+
+    public Integer getTotalMembers() { return totalMembers; }
+    public void setTotalMembers(Integer totalMembers) { this.totalMembers = totalMembers; }
+
+    public BookingStatus getStatus() { return status; }
+    public void setStatus(BookingStatus status) { this.status = status; }
+
+    public RefundStatus getRefundStatus() { return refundStatus; }
+    public void setRefundStatus(RefundStatus refundStatus) { this.refundStatus = refundStatus; }
+
+    public String getOrderId() { return orderId; }
+    public void setOrderId(String orderId) { this.orderId = orderId; }
+
+    public String getPaymentIntentId() { return paymentIntentId; }
+    public void setPaymentIntentId(String paymentIntentId) { this.paymentIntentId = paymentIntentId; }
+
+    public String getRefundId() { return refundId; }
+    public void setRefundId(String refundId) { this.refundId = refundId; }
+
+    public OffsetDateTime getRefundRequestedAt() { return refundRequestedAt; }
+    public void setRefundRequestedAt(OffsetDateTime refundRequestedAt) { this.refundRequestedAt = refundRequestedAt; }
+
+    public OffsetDateTime getRefundProcessedAt() { return refundProcessedAt; }
+    public void setRefundProcessedAt(OffsetDateTime refundProcessedAt) { this.refundProcessedAt = refundProcessedAt; }
+
+    public OffsetDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(OffsetDateTime createdAt) { this.createdAt = createdAt; }
 }

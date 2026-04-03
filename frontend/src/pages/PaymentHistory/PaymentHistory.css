@@ -1,0 +1,31 @@
+.payment-history-page {
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.payment-history-card {
+  width: min(1000px, 100%);
+  background: #fff;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+.payment-history-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.payment-history-table th,
+.payment-history-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #e7e7e7;
+  text-align: left;
+}
+
+.payment-history-table th {
+  font-weight: 600;
+  color: #333;
+}

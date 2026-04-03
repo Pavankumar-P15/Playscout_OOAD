@@ -4,12 +4,12 @@ import { assets } from '../../assets/assets';
 import { StoreContext } from '../../context/storeContextInstance';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import axios from "axios"
+import axios from 'axios';
 import { toast } from 'react-toastify';
 import { format } from 'date-fns';
 
 const Bookpop = ({ setShowBooking, courtDetails }) => {
-  const { id, courtName, courtLocation, price, game_icon, sport, courtImage } = courtDetails;
+  const { venueId, courtName, courtLocation, price, game_icon, sport, courtImage } = courtDetails;
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const { url, getImageUrl } = useContext(StoreContext);
@@ -17,38 +17,77 @@ const Bookpop = ({ setShowBooking, courtDetails }) => {
 
   const today = new Date();
   const availableDates = [
+    today,
     new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1),
-    new Date(today.getFullYear(), today.getMonth(), today.getDate() + 2),
-    new Date(today.getFullYear(), today.getMonth(), today.getDate() + 3)
+    new Date(today.getFullYear(), today.getMonth(), today.getDate() + 2)
   ];
 
   const handleConfirmBooking = async () => {
-    if (selectedDate && selectedSlot) {
-      const bookingData = {
-        venueId: id,
-        bookingDate: format(selectedDate, 'yyyy-MM-dd'),
-        slot: selectedSlot,
-      };
-    
+    if (!selectedDate || !selectedSlot) {
+      alert('Please select both a date and a time slot before confirming the booking.');
+      return;
+    }
+
+    const formattedDate = format(selectedDate, 'dd-MM-yyyy');
+    const paymentBody = {
+      amount: price * 100,
+      currency: 'inr',
+      venueId: venueId,
+      userId: localStorage.getItem('userId') || '',
+      courtName,
+      courtLocation,
+      courtImage,
+      sport,
+      bookingDate: formattedDate,
+      bookingSlot: selectedSlot,
+      membersJoined: 1,
+      totalMembers: 1
+    };
+
+    try {
+      const response = await axios.post(`${url}/api/payments/checkout-session`, paymentBody, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      const redirectUrl = response?.data?.url;
+      if (redirectUrl) {
+        window.location.href = redirectUrl;
+      } else {
+        toast.error('Could not initialize payment session. Please try again.');
+      }
+    } catch (error) {
+      console.error('Payment session error:', error);
+      toast.error('Payment is unavailable right now. Booking is saved as pending.');
+
+      // fallback to simple booking creation when Stripe fails
       try {
-        const response = await axios.post(`${url}/api/bookings`, bookingData, {
+        const bookingData = {
+          userId: localStorage.getItem('userId') || '',
+          venueId: venueId,
+          courtName,
+          courtLocation,
+          sport,
+          courtImage,
+          price,
+          bookingDate: formattedDate,
+          bookingSlot: selectedSlot,
+          membersJoined: 1,
+          totalMembers: 1
+        };
+
+        const fallbackResponse = await axios.post(`${url}/api/bookings/add-booking`, bookingData, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        if (response.data.success) {
-          console.log("Booking confirmed and saved to database.");
-          toast.success(response.data.message);
-          console.log(`Booking confirmed for ${courtName} on ${selectedDate.toLocaleDateString()} at ${selectedSlot}`);
+
+        if (fallbackResponse.data?.success) {
+          toast.success('Booking created as pending while payment is unavailable.');
           setShowBooking(false);
         } else {
-          console.error("Booking failed.");
-          toast.error(response.data.message);
+          toast.error('Booking could not be saved.');
         }
-      } catch (error) {
-        console.error("Error saving booking:", error);
-        toast.error(error.response?.data?.message || "Failed to confirm booking. Please try again.");
+      } catch (fallbackError) {
+        console.error('Booking fallback failed:', fallbackError);
       }
-    } else {
-      alert("Please select both a date and a time slot before confirming the booking.");
     }
   };
 
@@ -70,7 +109,7 @@ const Bookpop = ({ setShowBooking, courtDetails }) => {
             <img className="game_icon" src={getImageUrl(game_icon)} alt={sport} />
             <p className="sport-name">{sport}</p>
             <p className="court-location">{courtLocation}</p>
-            <p className="court-price">Price: ₹{price}/hr</p>
+            <p className="court-price">Price: Rs {price}/hr</p>
           </div>
         </div>
 

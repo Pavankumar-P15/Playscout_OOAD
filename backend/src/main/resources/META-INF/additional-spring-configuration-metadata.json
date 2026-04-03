@@ -1,0 +1,19 @@
+{
+  "properties": [
+    {
+      "name": "app.baseUrl",
+      "type": "java.lang.String",
+      "description": "Base URL for frontend redirects."
+    },
+    {
+      "name": "stripe.secretKey",
+      "type": "java.lang.String",
+      "description": "Stripe secret API key."
+    },
+    {
+      "name": "stripe.webhookSecret",
+      "type": "java.lang.String",
+      "description": "Stripe webhook signing secret."
+    }
+  ]
+}

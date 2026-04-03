@@ -75,12 +75,40 @@ const FacilityManagement = () => {
       return;
     }
 
+    // Validation
+    if (!venueData.courtName.trim()) {
+      toast.error('Court name is required.');
+      return;
+    }
+    if (!venueData.sport.trim()) {
+      toast.error('Sport is required.');
+      return;
+    }
+    if (!venueData.courtLocation.trim()) {
+      toast.error('Court location is required.');
+      return;
+    }
+    const courtsAvailableNum = Number(venueData.courtsAvailable);
+    if (isNaN(courtsAvailableNum) || courtsAvailableNum <= 0) {
+      toast.error('Courts available must be a number greater than 0.');
+      return;
+    }
+    const priceNum = Number(venueData.price);
+    if (isNaN(priceNum) || priceNum < 0) {
+      toast.error('Price must be a number 0 or greater.');
+      return;
+    }
+    if (!venueData.courtImage) {
+      toast.error('Court image is required.');
+      return;
+    }
+
     const formData = new FormData();
-    formData.append('courtName', venueData.courtName);
-    formData.append('sport', venueData.sport);
-    formData.append('courtLocation', venueData.courtLocation);
-    formData.append('courtsAvailable', Number(venueData.courtsAvailable));
-    formData.append('price', Number(venueData.price));
+    formData.append('courtName', venueData.courtName.trim());
+    formData.append('sport', venueData.sport.trim());
+    formData.append('courtLocation', venueData.courtLocation.trim());
+    formData.append('courtsAvailable', courtsAvailableNum);
+    formData.append('price', priceNum);
     formData.append('court-image', venueData.courtImage);
 
     try {

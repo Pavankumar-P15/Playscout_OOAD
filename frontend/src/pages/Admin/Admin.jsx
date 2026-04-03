@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { BarChart3, Users, Building2, Gamepad2 } from 'lucide-react';
+import { BarChart3, Users, Building2, Gamepad2, CreditCard } from 'lucide-react';
 import './Admin.css';
 import axios from 'axios';
 import { StoreContext } from '../../context/storeContextInstance';
@@ -8,6 +8,14 @@ import { toast } from 'react-toastify';
 const Admin = () => {
   const { url, token, role } = useContext(StoreContext);
   const [activeTab, setActiveTab] = useState('dashboard');
+
+  const formatAmount = (amount, currency) => {
+    if (amount == null) return '-';
+    const curr = String(currency || '').toLowerCase();
+    const value = curr ? amount / 100 : amount;
+    const displayCurrency = curr ? curr.toUpperCase() : '';
+    return `${value} ${displayCurrency}`.trim();
+  };
   
   // Dashboard state
   const [dashboard, setDashboard] = useState({
@@ -25,6 +33,12 @@ const Admin = () => {
 
 // Games state
   const [games, setGames] = useState([]);
+
+  // Refunds state
+  const [refunds, setRefunds] = useState([]);
+
+  // Payments state
+  const [payments, setPayments] = useState([]);
   
   const [loading, setLoading] = useState(false);
 
@@ -97,6 +111,42 @@ const Admin = () => {
     }
   };
 
+  // Fetch refund requests
+  const fetchRefunds = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${url}/api/admin/refunds`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (response.data.success) {
+        setRefunds(response.data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching refunds:', error);
+      toast.error('Failed to load refund requests');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch payments
+  const fetchPayments = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${url}/api/admin/payments`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (response.data.success) {
+        setPayments(response.data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching payments:', error);
+      toast.error('Failed to load payments');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Suspend user
   const handleSuspendUser = async (userId) => {
     try {
@@ -151,6 +201,27 @@ const Admin = () => {
     }
   };
 
+  const handleRefund = async (bookingId) => {
+    if (!window.confirm('Process refund for this booking?')) {
+      return;
+    }
+    try {
+      const response = await axios.patch(
+        `${url}/api/admin/bookings/${bookingId}/refund`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (response.data.success) {
+        toast.success('Refund processed');
+        fetchRefunds();
+      } else {
+        toast.error(response.data.message || 'Refund failed');
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Refund failed');
+    }
+  };
+
   // Load data on tab change
   useEffect(() => {
     if (!token || role !== 'ADMIN') return;
@@ -163,6 +234,10 @@ const Admin = () => {
       fetchVenues();
     } else if (activeTab === 'games') {
       fetchGames();
+    } else if (activeTab === 'refunds') {
+      fetchRefunds();
+    } else if (activeTab === 'payments') {
+      fetchPayments();
     }
   }, [activeTab, token, role, url]);
 
@@ -213,6 +288,19 @@ const Admin = () => {
         >
           <Gamepad2 className='button-icon' />
           Games
+        </button>
+        <button
+          onClick={() => setActiveTab('refunds')}
+          className={`custom-button ${activeTab === 'refunds' ? 'active' : ''}`}
+        >
+          Refunds
+        </button>
+        <button
+          onClick={() => setActiveTab('payments')}
+          className={`custom-button ${activeTab === 'payments' ? 'active' : ''}`}
+        >
+          <CreditCard className='button-icon' />
+          Payments
         </button>
       </div>
 
@@ -394,6 +482,103 @@ const Admin = () => {
               </table>
             ) : (
               <p>No games found</p>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Refunds Tab */}
+      {activeTab === 'refunds' && (
+        <div className='card'>
+          <div className='card-header'>
+            <h2 className='card-title'>Refund Requests</h2>
+          </div>
+          <div className='card-content'>
+            {loading ? (
+              <p>Loading refund requests...</p>
+            ) : refunds.length > 0 ? (
+              <table className='admin-table'>
+                <thead>
+                  <tr>
+                    <th>Booking</th>
+                    <th>User</th>
+                    <th>Court</th>
+                    <th>Date</th>
+                    <th>Slot</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {refunds.map((refund) => (
+                    <tr key={refund.bookingId}>
+                      <td>{refund.bookingId}</td>
+                      <td>{refund.userEmail || refund.userId}</td>
+                      <td>{refund.courtName}</td>
+                      <td>{refund.bookingDate}</td>
+                      <td>{refund.bookingSlot}</td>
+                      <td>{formatAmount(refund.price, 'inr')}</td>
+                      <td>{refund.refundStatus}</td>
+                      <td>
+                        <button
+                          className='action-button'
+                          onClick={() => handleRefund(refund.bookingId)}
+                        >
+                          Refund
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p>No refund requests</p>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Payments Tab */}
+      {activeTab === 'payments' && (
+        <div className='card'>
+          <div className='card-header'>
+            <h2 className='card-title'>All Payments</h2>
+          </div>
+          <div className='card-content'>
+            {loading ? (
+              <p>Loading payments...</p>
+            ) : payments.length > 0 ? (
+              <table className='admin-table'>
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>User</th>
+                    <th>Court</th>
+                    <th>Slot</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {payments.map((payment) => (
+                    <tr key={payment.id}>
+                      <td>{(payment.bookingDate || '').split('T')[0] || payment.bookingDate}</td>
+                      <td>{payment.userEmail || payment.userId}</td>
+                      <td>{payment.courtName}</td>
+                      <td>{payment.bookingSlot}</td>
+                      <td>{formatAmount(payment.amount, payment.currency)}</td>
+                      <td>
+                        <span className={`status-${String(payment.status || '').toLowerCase()}`}>
+                          {payment.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p>No payments found</p>
             )}
           </div>
         </div>

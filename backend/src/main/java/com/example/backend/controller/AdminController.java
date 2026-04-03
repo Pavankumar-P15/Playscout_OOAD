@@ -2,6 +2,8 @@ package com.example.backend.controller;
 
 import com.example.backend.dto.AdminDashboardResponse;
 import com.example.backend.dto.AdminGameResponse;
+import com.example.backend.dto.AdminPaymentResponse;
+import com.example.backend.dto.AdminRefundRequestResponse;
 import com.example.backend.dto.AdminUserResponse;
 import com.example.backend.dto.AdminVenueResponse;
 import com.example.backend.service.AdminService;
@@ -58,6 +60,15 @@ public class AdminController {
         ));
     }
 
+    @GetMapping("/payments")
+    public ResponseEntity<Map<String, Object>> getAllPayments() {
+        List<AdminPaymentResponse> payments = adminService.getAllPayments();
+        return ResponseEntity.ok(Map.of(
+                "success", true,
+                "data", payments
+        ));
+    }
+
     @PatchMapping("/users/{userId}/suspend")
     public ResponseEntity<Map<String, Object>> suspendUser(@PathVariable UUID userId) {
         try {
@@ -97,6 +108,31 @@ public class AdminController {
             return ResponseEntity.ok(Map.of(
                     "success", true,
                     "message", "Game cancelled successfully"
+            ));
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "success", false,
+                    "message", ex.getMessage()
+            ));
+        }
+    }
+
+    @GetMapping("/refunds")
+    public ResponseEntity<Map<String, Object>> getRefundRequests() {
+        List<AdminRefundRequestResponse> refunds = adminService.getRefundRequests();
+        return ResponseEntity.ok(Map.of(
+                "success", true,
+                "data", refunds
+        ));
+    }
+
+    @PatchMapping("/bookings/{bookingId}/refund")
+    public ResponseEntity<Map<String, Object>> refundBooking(@PathVariable UUID bookingId) {
+        try {
+            adminService.processRefund(bookingId);
+            return ResponseEntity.ok(Map.of(
+                    "success", true,
+                    "message", "Refund processed"
             ));
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.badRequest().body(Map.of(

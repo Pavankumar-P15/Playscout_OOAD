@@ -9,7 +9,7 @@ import { format } from 'date-fns';
 import { assets } from '../../assets/assets';
 
 const CreateGame = ({ setShowCreateGame, courtDetails }) => {
-  const { id, courtName, courtLocation, price, game_icon, sport } = courtDetails;
+  const { venueId, courtName, courtLocation, price, game_icon, sport } = courtDetails;
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [totalMembers, setTotalMembers] = useState('');
@@ -28,7 +28,7 @@ const CreateGame = ({ setShowCreateGame, courtDetails }) => {
   const handleCreateGame = async () => {
     if (selectedDate && selectedSlot && totalMembers && availableMembers) {
       const gameData = {
-        venueId: id,
+        venueId: venueId,
         date: format(selectedDate, 'yyyy-MM-dd'),
         slot: selectedSlot,
         totalMembers: Number(totalMembers),
@@ -79,7 +79,7 @@ const CreateGame = ({ setShowCreateGame, courtDetails }) => {
             <img className="game_icon" src={getImageUrl(game_icon)} alt={sport} />
             <p className="sport-name">{sport}</p>
             <p className="court-location">{courtLocation}</p>
-            <p className="court-price">Price: ₹{price}/hr</p>
+            <p className="court-price">Price: Rs {price}/hr</p>
           </div>
           <div className="date-selection">
             <h4>Select Date:</h4>

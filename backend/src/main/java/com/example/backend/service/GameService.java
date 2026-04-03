@@ -133,9 +133,7 @@ public class GameService {
         List<Game> games = gameRepository.findActiveByVenueIdAndDate(venueId, gameDate);
 
         boolean hasConflict = games.stream()
-                .anyMatch(existing -> {
-                    return startTime.isBefore(existing.getEndTime()) && existing.getStartTime().isBefore(endTime);
-                });
+                .anyMatch(existing -> startTime.isBefore(existing.getEndTime()) && existing.getStartTime().isBefore(endTime));
 
         if (hasConflict) {
             throw new IllegalArgumentException("Selected slot already has a game at this venue");
@@ -147,19 +145,18 @@ public class GameService {
         return new GameResponse(
                 game.getId(),
                 game.getDate(),
-            game.getStartTime().format(SLOT_FORMATTER) + "-" + game.getEndTime().format(SLOT_FORMATTER),
-            venue.getGameIcon(),
-            venue.getSport(),
+                game.getStartTime().format(SLOT_FORMATTER) + "-" + game.getEndTime().format(SLOT_FORMATTER),
+                venue.getGameIcon(),
+                venue.getSport(),
                 game.getCreatedBy().getId(),
                 game.getMembersJoined(),
                 game.getTotalMembers(),
                 game.getSkillLevel(),
-            venue.getCourtName(),
-            venue.getCourtLocation(),
+                venue.getCourtName(),
+                venue.getCourtLocation(),
                 game.getCreatedBy().getName(),
                 game.getCreatedBy().getUserImage() != null
                         ? game.getCreatedBy().getUserImage()
                         : "avatars/m_avatar2.png");
     }
-
 }

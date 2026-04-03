@@ -55,6 +55,7 @@ const FacilityInfo = () => {
   ];
 
   const courtDetails = {
+    venueId: court._id,
     courtName:court.courtName,
     courtLocation:court.courtLocation,
     courtImage:court.courtImage,

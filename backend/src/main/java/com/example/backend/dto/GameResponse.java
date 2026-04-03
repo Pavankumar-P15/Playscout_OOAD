@@ -5,32 +5,60 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
 public class GameResponse {
+
+    public GameResponse(
+        UUID id,
+        LocalDate date,
+        String slot,
+        String sportIcon,
+        String sportName,
+        UUID createdBy,
+        Integer membersJoined,
+        Integer totalMembers,
+        String skillLevel,
+        String courtName,
+        String location,
+        String userName,
+        String userImage
+    ) {
+        this.id = id;
+        this.date = date;
+        this.slot = slot;
+        this.sportIcon = sportIcon;
+        this.sportName = sportName;
+        this.createdBy = createdBy;
+        this.membersJoined = membersJoined;
+        this.totalMembers = totalMembers;
+        this.skillLevel = skillLevel;
+        this.courtName = courtName;
+        this.location = location;
+        this.userName = userName;
+        this.userImage = userImage;
+    }
     
     @JsonProperty("_id")
-    private UUID id;
+    private final UUID id;
 
-    private LocalDate date;
-    private String slot;
-    private String sportIcon;
-    private String sportName;
+    private final LocalDate date;
+    private final String slot;
+    private final String sportIcon;
+    private final String sportName;
 
     @JsonProperty("userID")
-    private UUID createdBy;
+    private final UUID createdBy;
     
-    private Integer membersJoined;
-    private Integer totalMembers;
+    private final Integer membersJoined;
+    private final Integer totalMembers;
 
     @JsonProperty("level")
-    private String skillLevel;
+    private final String skillLevel;
 
-    private String courtName;
-    private String location;
-    private String userName;
-    private String userImage;
+    private final String courtName;
+    private final String location;
+    private final String userName;
+    private final String userImage;
 }

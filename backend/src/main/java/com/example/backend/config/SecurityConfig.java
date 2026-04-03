@@ -1,8 +1,7 @@
 package com.example.backend.config;
 
-import com.example.backend.security.JwtAuthenticationFilter;
-import com.example.backend.security.OAuth2SuccessHandler;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +17,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import com.example.backend.security.JwtAuthenticationFilter;
+import com.example.backend.security.OAuth2SuccessHandler;
+
 import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
@@ -50,10 +53,12 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                     .requestMatchers("/ws/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll()
+                        .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll()
                         .requestMatchers("/api/venues").permitAll()
                         .requestMatchers("/api/games").permitAll()
                         .requestMatchers("/api/news").permitAll()
+                        .requestMatchers("/api/payments/**").permitAll()
+                        .requestMatchers("/webhooks/stripe").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/facility-manager/**").hasRole("FACILITY_MANAGER")
                         .requestMatchers("/api/player/**").hasRole("PLAYER")

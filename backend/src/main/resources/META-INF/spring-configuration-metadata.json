@@ -1,0 +1,21 @@
+{
+  "properties": [
+    { "name": "app.cors.allowed-origins", "type": "java.lang.String" },
+    { "name": "stripe.secretKey", "type": "java.lang.String" },
+    { "name": "stripe.webhookSecret", "type": "java.lang.String" },
+    { "name": "app.baseUrl", "type": "java.lang.String" },
+    { "name": "jwt.secret", "type": "java.lang.String" },
+    { "name": "app.frontend-url", "type": "java.lang.String" },
+    { "name": "app.oauth.enabled", "type": "java.lang.Boolean", "defaultValue": false },
+    { "name": "admin.bootstrap.enabled", "type": "java.lang.Boolean", "defaultValue": false },
+    { "name": "admin.bootstrap.email", "type": "java.lang.String" },
+    { "name": "admin.bootstrap.password", "type": "java.lang.String" },
+    { "name": "admin.bootstrap.name", "type": "java.lang.String" },
+    { "name": "admin.bootstrap.image", "type": "java.lang.String" },
+    { "name": "gnews.api.url", "type": "java.lang.String" },
+    { "name": "gnews.cache.ttl-seconds", "type": "java.lang.Integer" },
+    { "name": "supabase.url", "type": "java.lang.String" },
+    { "name": "supabase.key", "type": "java.lang.String" },
+    { "name": "supabase.bucket", "type": "java.lang.String" }
+  ]
+}

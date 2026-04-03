@@ -1,81 +1,84 @@
 package com.example.backend.controller;
 
-import com.example.backend.dto.CreateBookingRequest;
-import com.example.backend.dto.BookingResponse;
-import com.example.backend.dto.UpdateBookingStatusRequest;
-import com.example.backend.enums.BookingStatus;
+import com.example.backend.dto.BookingRequest;
+import com.example.backend.model.Booking;
 import com.example.backend.service.BookingService;
-import java.util.UUID;
+import jakarta.validation.Valid;
 import java.util.Map;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import java.util.UUID;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/bookings")
-@RequiredArgsConstructor
 public class BookingController {
 
     private final BookingService bookingService;
 
-    @PostMapping
-    @PreAuthorize("hasRole('PLAYER')")
-    public ResponseEntity<Map<String, Object>> addBooking(
-            Authentication authentication,
-            @RequestBody CreateBookingRequest request) {
-        try {
-            BookingResponse booking = bookingService.createBooking(authentication.getName(), request);
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(Map.of("success", true, "message", "Booking created successfully", "data", booking));
-        } catch (IllegalArgumentException ex) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("success", false, "message", ex.getMessage()));
-        }
+    public BookingController(BookingService bookingService) {
+        this.bookingService = bookingService;
     }
 
-    @GetMapping
+    @PostMapping("/add-booking")
+    public ResponseEntity<Map<String, Object>> addBooking(
+        Authentication authentication,
+        @Valid @RequestBody BookingRequest request
+    ) {
+        String resolverUserId = authentication != null ? authentication.getName() : request.getUserId();
+
+        request.setUserId(resolverUserId);
+        Booking booking = bookingService.createBooking(request);
+
+        return ResponseEntity.ok(Map.of(
+            "success", true,
+            "message", "Booking saved successfully",
+            "booking", booking
+        ));
+    }
+
+    @GetMapping({ "", "/list-bookings" })
     public ResponseEntity<Map<String, Object>> listBookings(Authentication authentication) {
-        try {
-            return ResponseEntity.ok(Map.of(
-                    "success", true,
-                    "data", bookingService.listBookings(authentication.getName())));
-        } catch (IllegalArgumentException ex) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("success", false, "message", ex.getMessage()));
-        }
+        String userId = authentication != null ? authentication.getName() : "";
+        return ResponseEntity.ok(Map.of("success", true, "data", bookingService.listByUser(userId)));
     }
 
     @PatchMapping("/{id}")
-    @PreAuthorize("hasRole('PLAYER')")
     public ResponseEntity<Map<String, Object>> updateBookingStatus(
-            Authentication authentication,
-            @RequestBody UpdateBookingStatusRequest request,
-            @PathVariable UUID id) {
-        if (request == null || request.getStatus() == null) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("success", false, "message", "Booking status is required"));
+        Authentication authentication,
+        @RequestBody Map<String, String> body,
+        @PathVariable UUID id
+    ) {
+        String status = body.get("status");
+        if (status == null || !"CANCELLED".equalsIgnoreCase(status)) {
+            return ResponseEntity.badRequest().body(Map.of("success", false, "message", "Only cancellation is supported"));
         }
+        return cancelBooking(authentication, Map.of("id", id.toString()));
+    }
 
-        if (request.getStatus() != BookingStatus.CANCELLED) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("success", false, "message", "Only cancellation is supported"));
+    @PostMapping("/cancel-booking")
+    public ResponseEntity<Map<String, Object>> cancelBooking(
+        Authentication authentication,
+        @RequestBody Map<String, String> body
+    ) {
+        String userId = authentication != null ? authentication.getName() : "";
+        if (!body.containsKey("id")) {
+            return ResponseEntity.badRequest().body(Map.of("success", false, "message", "Missing booking id"));
         }
-
+        UUID bookingId;
         try {
-            bookingService.cancelBooking(authentication.getName(), id);
-            return ResponseEntity.ok(Map.of("success", true, "message", "Booking cancelled successfully"));
+            bookingId = UUID.fromString(body.get("id"));
         } catch (IllegalArgumentException ex) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("success", false, "message", ex.getMessage()));
+            return ResponseEntity.badRequest().body(Map.of("success", false, "message", "Invalid booking id"));
         }
+        var cancelledOpt = bookingService.cancelBooking(bookingId, userId);
+        if (cancelledOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("success", false, "message", "Could not cancel booking"));
+        }
+        Booking booking = cancelledOpt.get();
+        if (booking.getRefundStatus() != null && booking.getRefundStatus().name().equals("REQUESTED")) {
+            return ResponseEntity.ok(Map.of("success", true, "message", "Booking cancelled. Refund requested."));
+        }
+        return ResponseEntity.ok(Map.of("success", true, "message", "Booking cancelled"));
     }
 }

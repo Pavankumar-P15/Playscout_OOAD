@@ -173,6 +173,36 @@
   font-weight: 500;
 }
 
+.status-paid {
+  display: inline-block;
+  background-color: #c6f6d5;
+  color: #22543d;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.status-pending {
+  display: inline-block;
+  background-color: #faf089;
+  color: #744210;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.status-failed {
+  display: inline-block;
+  background-color: #fed7d7;
+  color: #742a2a;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
 /* Action buttons */
 .action-button {
   padding: 0.5rem 1rem;

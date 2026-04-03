@@ -8,6 +8,7 @@ import com.example.backend.enums.Role;
 import com.example.backend.model.User;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.security.JwtUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,18 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+
+    @Value("${admin.bootstrap.email:}")
+    private String adminEmail;
+
+    @Value("${admin.bootstrap.password:}")
+    private String adminPassword;
+
+    @Value("${admin.bootstrap.name:Admin}")
+    private String adminName;
+
+    @Value("${admin.bootstrap.image:avatars/m_avatar1.png}")
+    private String adminImage;
 
     public AuthServiceImpl(
             UserRepository userRepository,
@@ -35,7 +48,11 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthResponse login(LoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new AuthException("User not found"));
+                .orElseGet(() -> tryBootstrapAdmin(request));
+
+        if (user == null) {
+            throw new AuthException("User not found");
+        }
 
         if (Boolean.TRUE.equals(user.getSuspended())) {
             throw new AuthException("Your account is suspended.");
@@ -43,6 +60,12 @@ public class AuthServiceImpl implements AuthService {
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new AuthException("Invalid password");
+        }
+
+        if (isBootstrapAdminEmail(user.getEmail()) && user.getRole() != Role.ADMIN) {
+            user.setRole(Role.ADMIN);
+            user.setSuspended(false);
+            userRepository.save(user);
         }
 
         String token = jwtUtil.generateToken(user.getId(), user.getEmail(), user.getRole().name());
@@ -71,6 +94,34 @@ public class AuthServiceImpl implements AuthService {
 
         String token = jwtUtil.generateToken(user.getId(), user.getEmail(), user.getRole().name());
         return new AuthResponse(user.getId(), token, user.getRole(), user.getUserImage());
+    }
+
+    private User tryBootstrapAdmin(LoginRequest request) {
+        if (!isBootstrapAdminEmail(request.getEmail())) {
+            return null;
+        }
+        if (adminPassword == null || adminPassword.isBlank()) {
+            return null;
+        }
+        if (!adminPassword.equals(request.getPassword())) {
+            return null;
+        }
+
+        User admin = new User();
+        admin.setName(adminName);
+        admin.setEmail(request.getEmail());
+        admin.setPassword(passwordEncoder.encode(adminPassword));
+        admin.setUserImage(adminImage);
+        admin.setRole(Role.ADMIN);
+        admin.setSuspended(false);
+        return userRepository.save(admin);
+    }
+
+    private boolean isBootstrapAdminEmail(String email) {
+        return adminEmail != null
+            && !adminEmail.isBlank()
+            && email != null
+            && adminEmail.equalsIgnoreCase(email.trim());
     }
 
     private Role resolveRequestedRole(RegisterRequest request) {

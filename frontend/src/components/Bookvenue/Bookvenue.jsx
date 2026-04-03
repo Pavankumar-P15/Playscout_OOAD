@@ -15,7 +15,7 @@ const Bookvenue = ({ id, className, courtName, courtLocation, courtsAvailable, p
   }
 
   const courtDetails = {
-    id,
+    venueId: id,
     courtName,
     courtLocation,
     price,

@@ -12,6 +12,7 @@ const Upcoming = () => {
   const [expandedJoinedGameId, setExpandedJoinedGameId] = useState('');
   const [requestActionLoadingId, setRequestActionLoadingId] = useState('');
   const [refreshingPageData, setRefreshingPageData] = useState(false);
+  const [paymentLoadingId, setPaymentLoadingId] = useState('');
   const {
     url,
     fetchGameList,
@@ -82,8 +83,12 @@ const Upcoming = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       if (response?.data?.success) {
-        toast.success(response.data.message);
-        setBookings((prev) => prev.filter((booking) => booking._id !== bookId));
+        if (response.data?.refundId) {
+          toast.success(`${response.data.message} (Refund: ${response.data.refundId})`);
+        } else {
+          toast.success(response.data.message);
+        }
+        setBookings((prev) => prev.filter((booking) => booking.id !== bookId));
         await fetchBookings();
         await fetchVenueList({ force: true });
       } else {
@@ -91,6 +96,30 @@ const Upcoming = () => {
       }
     } catch (error) {
       toast.error('Booking cancellation endpoint is unavailable.');
+    }
+  };
+
+  const handlePayNow = async (booking) => {
+    if (!booking?.id) {
+      return;
+    }
+    try {
+      setPaymentLoadingId(booking.id);
+      const response = await axios.post(
+        `${url}/api/payments/checkout-session/booking/${booking.id}`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      const redirectUrl = response?.data?.url;
+      if (redirectUrl) {
+        window.location.href = redirectUrl;
+      } else {
+        toast.error('Unable to start payment.');
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || 'Unable to start payment.');
+    } finally {
+      setPaymentLoadingId('');
     }
   };
 
@@ -213,6 +242,36 @@ const Upcoming = () => {
   const expandedJoinedGame = plannedGames.find((game) => game._id === expandedJoinedGameId);
   const expandedPreAddedCount = Math.max((expandedJoinedGame?.membersJoined || 0) - expandedJoinedMembers.length, 0);
 
+  const parseBookingStart = (bookingDate, bookingSlot) => {
+    if (!bookingDate || !bookingSlot) return null;
+    const dateParts = bookingDate.includes('-') ? bookingDate.split('-') : [];
+    let dateObj = null;
+    if (dateParts.length === 3) {
+      const [p1, p2, p3] = dateParts;
+      if (p1.length === 4) {
+        dateObj = new Date(`${p1}-${p2}-${p3}T00:00:00`);
+      } else {
+        dateObj = new Date(`${p3}-${p2}-${p1}T00:00:00`);
+      }
+    }
+    if (Number.isNaN(dateObj?.getTime())) {
+      return null;
+    }
+    const slotStart = bookingSlot.split('-')[0]?.trim();
+    if (!slotStart) return dateObj;
+    const [hours, minutes] = slotStart.split(':').map((value) => parseInt(value, 10));
+    if (Number.isNaN(hours)) return dateObj;
+    dateObj.setHours(hours, Number.isNaN(minutes) ? 0 : minutes, 0, 0);
+    return dateObj;
+  };
+
+  const canPayNow = (booking) => {
+    if (!booking || booking.status !== 'PENDING') return false;
+    const start = parseBookingStart(booking.bookingDate, booking.bookingSlot || booking.slot);
+    if (!start) return true;
+    return new Date() < start;
+  };
+
   if (!token) {
     return (
       <div className='upcoming-container'>
@@ -248,6 +307,11 @@ const Upcoming = () => {
               <th>Sport</th>
               <th>Date</th>
               <th>Slot</th>
+              <th className='small-column'>Members Joined</th>
+              <th className='small-column'>Total Members</th>
+              <th className='small-column'>Status</th>
+              <th className='small-column'>Refund</th>
+              <th className='small-column'>Payment</th>
               <th>Cancel</th>
             </tr>
           </thead>
@@ -261,10 +325,30 @@ const Upcoming = () => {
                   <td>{booking.courtName}</td>
                   <td>{booking.courtLocation}</td>
                   <td>{booking.sport}</td>
-                  <td>{booking.bookingDate}</td>
-                  <td>{booking.slot}</td>
+                  <td>{(booking.bookingDate || '').split('T')[0] || booking.bookingDate}</td>
+                  <td>{booking.bookingSlot || booking.slot}</td>
+                  <td className='small-column'>{booking.membersJoined}</td>
+                  <td className='small-column'>{booking.totalMembers}</td>
+                  <td className='small-column'>
+                    {booking.status === 'CONFIRMED' ? 'BOOKED' : booking.status}
+                  </td>
+                  <td className='small-column'>{booking.refundStatus || '—'}</td>
+                  <td className='small-column'>
+                    {canPayNow(booking) ? (
+                      <button
+                        type='button'
+                        className='pay-now-btn'
+                        onClick={() => handlePayNow(booking)}
+                        disabled={paymentLoadingId === booking.id}
+                      >
+                        {paymentLoadingId === booking.id ? '...' : 'Pay now'}
+                      </button>
+                    ) : (
+                      <span className='muted-text'>-</span>
+                    )}
+                  </td>
                   <td>
-                    <p onClick={() => cancelBooking(booking._id)} className='book-cancel'>
+                    <p onClick={() => cancelBooking(booking.id)} className='book-cancel'>
                       x
                     </p>
                   </td>
@@ -272,7 +356,7 @@ const Upcoming = () => {
               ))
             ) : (
               <tr>
-                <td colSpan='9'>No upcoming bookings</td>
+                <td colSpan='12'>No upcoming bookings</td>
               </tr>
             )}
           </tbody>
