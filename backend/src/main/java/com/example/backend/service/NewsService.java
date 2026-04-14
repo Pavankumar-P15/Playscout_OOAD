@@ -1,106 +1,79 @@
 package com.example.backend.service;
 
-import java.net.URI;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
+import com.example.backend.adapter.NewsSourceAdapter;
+
+/**
+ * Proxy Pattern: Controls access to expensive external resource (news source) through caching.
+ * Depends on NewsSourceAdapter abstraction, not concrete implementations.
+ * 
+ * Open-Closed Principle: Service is closed for modification but open for extension.
+ * To add new news sources (RSS, Twitter, Reddit, etc.), simply create new adapter implementations
+ * and inject them. The NewsService proxy logic remains unchanged.
+ * 
+ * Example - Can switch implementations via constructor injection:
+ * - new NewsService(new NewsApiAdapter(...))          // GNews API
+ * - new NewsService(new RssFeedAdapter(...))          // RSS feeds
+ * - new NewsService(new TwitterApiAdapter(...))       // Twitter
+ * - new NewsService(new NewsAggregatorAdapter(...))   // Multiple sources combined
+ */
 @Service
-@RequiredArgsConstructor
 public class NewsService {
-
-    @Value("${gnews.api.url:https://gnews.io/api/v4/search}")
-    private String gNewsApiUrl;
 
     @Value("${gnews.cache.ttl-seconds:300}")
     private long cacheTtlSeconds;
 
-    private final Environment environment;
+    // Depends on abstraction, not concrete implementation
+    private final NewsSourceAdapter newsSourceAdapter;
 
+    // Cache state managed by proxy
     private final Object cacheLock = new Object();
     private volatile List<Map<String, String>> cachedArticles = List.of();
     private volatile Instant cacheFetchedAt = Instant.EPOCH;
 
-    @SuppressWarnings("unchecked")
+    public NewsService(NewsSourceAdapter newsSourceAdapter) {
+        this.newsSourceAdapter = newsSourceAdapter;
+    }
+
+    /**
+     * Proxy method: Returns cached articles if fresh, otherwise delegates to adapter to fetch fresh data.
+     * Uses double-checked locking for thread-safe caching.
+     */
     public List<Map<String, String>> getSportsNews() {
+        // First check without lock (fast path)
         if (isCacheFresh()) {
             return cachedArticles;
         }
 
+        // Synchronized block for cache update (slow path)
         synchronized (cacheLock) {
+            // Double-checked locking: verify cache is still stale
             if (isCacheFresh()) {
                 return cachedArticles;
             }
 
-            String gNewsApiKey = resolveApiKey();
-            if (gNewsApiKey.isBlank()) {
-                return cachedArticles;
-            }
+            // Cache is stale - delegate to real subject (any NewsSourceAdapter implementation)
+            List<Map<String, String>> freshArticles = newsSourceAdapter.fetchSportsArticles();
 
-        URI uri = UriComponentsBuilder.fromUriString(gNewsApiUrl)
-                .queryParam("q", "sports AND (cricket OR football OR stadium)")
-                .queryParam("country", "in")
-                .queryParam("token", gNewsApiKey)
-                .queryParam("lang", "en")
-                .encode()
-                .build()
-                .toUri();
-
-        Map<String, Object> response;
-        try {
-            RestTemplate restTemplate = new RestTemplate();
-            response = restTemplate.getForObject(uri, Map.class);
-        } catch (RestClientException ex) {
-                return cachedArticles;
-        }
-
-        if (response == null || !(response.get("articles") instanceof List<?> rawArticles)) {
-                return cachedArticles;
-        }
-
-            List<Map<String, String>> freshArticles = rawArticles.stream()
-                .filter(Map.class::isInstance)
-                .map(Map.class::cast)
-                .map(this::toArticle)
-                .toList();
-
+            // Update cache
             cachedArticles = freshArticles;
             cacheFetchedAt = Instant.now();
             return freshArticles;
         }
     }
 
+    /**
+     * Proxy decides: should we use cached version or fetch fresh data?
+     */
     private boolean isCacheFresh() {
         if (cacheTtlSeconds <= 0 || cacheFetchedAt.equals(Instant.EPOCH)) {
             return false;
         }
         return cacheFetchedAt.plusSeconds(cacheTtlSeconds).isAfter(Instant.now());
-    }
-
-    private String resolveApiKey() {
-        String key = environment.getProperty("G_API_KEY");
-        if (key == null || key.isBlank()) {
-            key = environment.getProperty("GNEWS_API_KEY", "");
-        }
-        return key == null ? "" : key.trim();
-    }
-
-    private Map<String, String> toArticle(Map<?, ?> rawArticle) {
-        return Map.of(
-                "title", toSafeString(rawArticle.get("title")),
-                "description", toSafeString(rawArticle.get("description")),
-                "image", toSafeString(rawArticle.get("image")),
-                "url", toSafeString(rawArticle.get("url")));
-    }
-
-    private String toSafeString(Object value) {
-        return value == null ? "" : String.valueOf(value);
     }
 }
