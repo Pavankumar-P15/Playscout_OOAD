@@ -1,0 +1,46 @@
+id,email,name,password,role,suspended,user_image
+f753fa62-572e-4be7-97a8-179e80238dfa,arjun@example.com,Arjun,$2a$10$wBCXnRcdpOH85So7ce2Aa.Ybqv3axX6JRQ706j5YfnkStlFU2Is0y,PLAYER,false,avatars/m_avatar1.png
+38f30b71-47d6-4572-9a04-0299452f514e,admin@playscout.com,Admin,$2a$10$bEJEoSkwQ8vXCHY32egntetyRICQd0SnWS5.EA74cSLb4n9eBx3O.,ADMIN,false,avatars/m_avatar1.png
+18bb0b77-4858-4f20-97d8-fa6af4d8b57b,arjun@playscout.com,Arjun,$2a$10$CTLR4vAJq0lolUBiviGKBeJkygORcgMoMjqPimJWR1cAdupgEVgtG,FACILITY_MANAGER,false,avatars/m_avatar3.png
+40f2c3be-774c-4b71-8350-a69630822708,anirudh@test.com,Anirudh H,$2a$10$5mzihbbyFkRLRRDfoEef8uCQtf.181iu95Hzhc6dW8yrsYoQKD4L.,PLAYER,false,avatars/m_avatar4.png
+0bc18452-131d-44a8-b7e7-f0561ce6f0e2,navjyoth@test.com,Navjyoth,$2a$10$dbZgsZxEMmGitg7enbRvS.oaxRz9rIHrmCO0TwXxbSoqDFN8Mvk8m,PLAYER,false,avatars/m_avatar4.png
+07a5e0df-7903-4ff6-aa16-e69509280ea8,prakruti@test.com,Prakruti P,$2a$10$blARitzfVZFy0wzvF6J.JeSj5N.32nRqtwXA5ryT5aye.xd1gXs1y,PLAYER,false,avatars/f_avatar1.png
+754f4364-315e-4ac8-bde0-6f04e3c37b20,ananya@test.com,Ananya V,$2a$10$MnxCrQ8qtpQ6iPUnG3Baquh55rHGDU8.qcu9XGoCrnR1r/c0aRtnG,FACILITY_MANAGER,false,avatars/f_avatar3.png
+5c1236f6-f058-4e5a-ae03-4f3c8d9ed40c,nishant@test.com,Nishant Hegde,$2a$10$leLECIqfI14oKYNifw8FXOis5p6/c75GJD6Z9CvzGKGFS8jBXw7rS,PLAYER,false,avatars/m_avatar5.png
+d029a0bf-8a2b-4bf7-b0ee-5ba1fbde4ae2,mallikarjun@test.com,Mallikarjun,$2a$10$/V5GUaXXHsUWHuhzXYa01.tdqxL/d5RT6b3qZOyZzAl41eSqYjrMK,PLAYER,false,avatars/m_avatar2.png
+f9b117ba-e046-49e6-8aba-18ec238dea22,harish@test.com,Harish A,$2a$10$.WrDE8ahSb5TAExAc4Rt.ehaCAj/10YToBGN6rTFOQZYhh0aU4qnu,PLAYER,false,avatars/m_avatar5.png
+893c6a02-338f-4e2d-9690-5106da041f30,varun@test.com,Varun T,$2a$10$ZnCTIswzvAPDl5z0FC117.Wu4Ilgqmq.PCpCXogcngm.kbSKWii.m,FACILITY_MANAGER,false,avatars/m_avatar4.png
+7a9969dd-9db7-43ba-9484-7a5a32a441ab,deepika@test.com,Deepika K,$2a$10$4XfGBnMK/iqosS6seba2SueJ2Jdtj9l1gM4pp.qEcDWRlaOGlhjkO,PLAYER,false,avatars/f_avatar4.png
+7639033b-1486-402d-93cd-63ab31aacc0e,nikhil@test.com,Nikhil R,$2a$10$yij/Q.wkS3eEV1Nr/C4/6OccngKoZHZIYwKzX/Tw481DgPwSwlJou,PLAYER,false,avatars/m_avatar3.png
+40df3b86-80ab-4868-8f47-1998ee8ceea5,pavan@test.com,Pavan K,$2a$10$siwE4O6DCNTJMZfNHIlvkOdnc.1mZ0rpx5DuxgUXM15WYaEJDdZvC,PLAYER,false,avatars/m_avatar3.png
+4ba15bdf-d902-4711-be96-fbbdc6e18488,manoj@test.com,Manoj N,$2a$10$Ig8bTevEJuYK8cJVJ86PQ./MYXEs.DNZQa9zIamnmPi71QQKbtEWm,PLAYER,false,avatars/m_avatar2.png
+c1979caa-3ff2-4a12-a04c-53f10c122202,raghav@test.com,Raghav P,$2a$10$0uyGKDsAijaXKqPmSnHf4uDwxsvSivxNg3ybs3V6/c4GCOO0.F0/G,PLAYER,false,avatars/m_avatar2.png
+169f1fcc-bd76-425a-af60-4463106978d1,priya@test.com,Priya G,$2a$10$HjAsVTT3aaJXu56Ux.PdX.39PqL..1oAbIfPb4R3lB9hfgRn90kdK,PLAYER,false,avatars/f_avatar1.png
+9610bec2-4c5b-4a94-b469-a973d172ff93,aryan@test.com,Aryan B,$2a$10$32m1L.KKZ/7WPGiGWlJ5J.hKsa3BHpt7/0Cz83mxk.0/en4iXaCfq,PLAYER,false,avatars/m_avatar1.png
+2c697c63-aa77-4f96-abe9-f91b6fbac33d,nipun@test.com,Nipun Rao,$2a$10$b3lBK4AVkTrdhvp/IKmEMenALu7Y5hHQCVSREnO9NuUyZt4FKcx1C,PLAYER,false,avatars/m_avatar3.png
+fe4b86b0-1758-4499-8221-f27b98da1d47,shreya@test.com,Shreya M,$2a$10$rVw54Ld9OhqoBIgW5pxGKeFRJWpR74lpYzmH4.eEC/Oz4qwEmcIza,FACILITY_MANAGER,false,avatars/f_avatar3.png
+26ad3c94-bd10-453e-8473-ce548771c304,manu@test.com,Manu P,$2a$10$CKuZFbjUiYvCZQYk55vIq.SVV5aFz6LX1P3p9J9UVUMPOLLhoD/R.,PLAYER,false,avatars/m_avatar4.png
+dabdd222-e8ce-41b0-947d-47e38f40b63b,anagha@test.com,Anagha R,$2a$10$Bqb9oou2Q2IoJkqz18H1ye4RrzV3XoJpp6Jj0u.XRYMhU57ek.5rS,PLAYER,false,avatars/f_avatar5.png
+91bcd1ca-19d0-41f3-be08-2b51e73d87a8,chandan@test.com,Chandan A,$2a$10$2biThNPrYhi8Ab.mtd4J.uGfF1RsLf7pGoRFFvkjeqXYCSvY1bdZa,PLAYER,false,avatars/m_avatar1.png
+fdc9dbcb-3725-4631-9aab-cb0deafba92c,aprameya@test.com,Aprameya,$2a$10$OYcPYxCbjruoLdxiz/FAAuhr4VmORwnTN8eOpU2VFjD8ltIJMNd7u,PLAYER,false,avatars/m_avatar3.png
+3dd3aa77-3f8c-4aa2-bb78-0f4084fc2c42,ankita@test.com,Ankita D,$2a$10$Zh/KTVSkalC10mY7l7UEd.xho8..ZVUtwnEn09mdlr6htQV26lrNG,PLAYER,false,avatars/f_avatar3.png
+1e183699-6d77-4651-aba9-006e04befc76,prajwal@test.com,"Prajwal R G ",$2a$10$hzSwSzdvoiLAar3hDVMFsurHMU7kE5jGRJIop8FpDm5eAbpKMmxB.,PLAYER,false,avatars/m_avatar1.png
+ee134588-6b42-4f06-99c4-0d649bbf13df,risha@test.com,"Risha ",$2a$10$0WSZyUGS5MRCboyqs6lIB.Zd35uz9zbvrXkpa82yhj.Pxu06vWB6O,PLAYER,false,avatars/f_avatar2.png
+6a723f3f-5300-4701-8a9f-027325abbf99,soumya@test.com,Soumya K,$2a$10$D7DSQ8HajrAFZomb1w.HqeZpVysIqJmq8X8QpefcGNO3Fcx9rdKWS,PLAYER,false,avatars/f_avatar1.png
+4f66ec5c-8665-466d-82eb-659e6b9b0df8,shrivardhan@test.com,Shrivardhan S,$2a$10$m4nMVK.8sA19ROhEjc5DYOil/0ZvlQMb4GnlNRvjhXYJxkhk0594i,PLAYER,false,avatars/m_avatar5.png
+4390fddb-4bd4-4200-841f-c0dc399ad9f7,shreyaR@test.com,Shreya R,$2a$10$HdiZkaNxRBSCBtlN7DvpBuWKj1pmTTPRbHKCv8LO4uY4CP1SS4Xb.,PLAYER,false,avatars/f_avatar4.png
+7c6228e3-95bd-4a81-be99-8e053eff5d4d,shreyas@test.com,Shreyas V,$2a$10$pKGa9oShwtjefoaFHVhL6uon63G0NYuknp2iYQCCqXX6hA2Rs596K,FACILITY_MANAGER,false,avatars/m_avatar4.png
+070ad7f7-3396-4b05-9ad5-9862b7124d33,vishal@test.com,Vishal J,$2a$10$rxMToAmLr/pkpxmsp1kYJOS/R8rVz5v.iy.s1z97kNGX0UE199Kvy,PLAYER,false,avatars/m_avatar1.png
+377c0da4-7eda-4c90-be6f-1d850d18ea94,prakash@test.com,Prakash S,$2a$10$tIKPX/D/Nt/xdmA8ZD2IT.emDGzCXAN86SAi3.5l33MLgTtV1uP/O,PLAYER,false,avatars/m_avatar5.png
+af8e383d-7482-4fe2-9ebb-7d25797e6765,namit@test.com,Namit U,$2a$10$V5l2Atwi/cb36HTLAIS3ouuQbjT29JlB7c/Gnx6EyfQPSi8zPjXNi,PLAYER,false,avatars/m_avatar2.png
+69b201a9-5ab6-47ae-be45-c2a2f11c48cb,aditya@test.com,Aditya K,$2a$10$Jq0i33KpwL3Nsx4Qm4LJnuqycN9bBZly3OvDw4E2LntzuBnbIsuam,PLAYER,false,avatars/m_avatar4.png
+3ea5c131-c496-4381-9e09-65eea4320331,manasi@test.com,Manasi P,$2a$10$8Rim4VHoKwB0QdB1GzUC8OkpHli/JPqwu7cIrAFDxdA.TTiH1sEBu,FACILITY_MANAGER,false,avatars/f_avatar5.png
+38f0e10d-0e85-4247-9043-73bdacb9c628,shruthi@test.com,Shruthi T,$2a$10$i2PSJjxvkpYUIao.7dyH6u.Oo9wBQz9EHPgcV2yvnfWKj2qMhYuPG,FACILITY_MANAGER,false,avatars/f_avatar5.png
+883c7d8a-6f99-4fb4-a392-760a86a95132,sanath@test.com,Sanath P,$2a$10$SuMBxgoXJ6F5q2fXnLXiBuzzggNZxTdYczKrdKpD6lKrQQTGdMcVC,PLAYER,false,avatars/m_avatar1.png
+22678734-c87e-49c2-872d-ac14ee1c6487,meghana@test.com,Meghana S,$2a$10$nTEbrSzp91Jq6NxkZ5B0Red3AgREVqVIWkE8UuviLdWD1kMLvKNvO,PLAYER,false,avatars/f_avatar5.png
+179626ca-4de5-4957-9f24-bc6749b1e330,tarak@test.com,Tarakeshwar K,$2a$10$F9uye9xuWkc1zaxAueNAROlyz7UJax3UJlc1zi37ZPq7hm1c6bTuS,PLAYER,false,avatars/m_avatar5.png
+25b44b08-bfc8-4508-ae43-fb1a7726940a,prakyath@test.com,Prakyath P,$2a$10$hexXLfXxtXlaBfEhhPECtum9a2TtRpeEJZwrpBSeEsN4KU3SUWsHe,PLAYER,false,avatars/m_avatar5.png
+53a93c40-0081-42a0-a20d-36403383e0d1,samarth@test.com,Samarth G,$2a$10$yalwk/c8imRbc4QZqK0uA.NlyJLUPvHYrmwyXeogdCbgi/wQZFQNW,PLAYER,false,avatars/m_avatar1.png
+b157be6a-f9f6-480d-a190-d1e3274e005b,nishmitha@test.com,Nishmitha S,$2a$10$o516t.p/vkomKnvglOdUme0zmxPe5X4zrLGjVrfV7ckBkicinsOQC,PLAYER,false,avatars/f_avatar3.png
+7cb5832d-4e9d-4571-bfa3-6114a5d8c347,omkarhegde20@gmail.com,Omkar,$2a$10$g3afba74u6XEIjhqL/cAsusx2jyrtraCm3ehrDkyJH6ywOsiBcBHy,PLAYER,false,avatars/m_avatar2.png
+2f66d746-16bd-4234-8afb-eb57eb65882c,hegde.omkar20@gmail.com,Omkar H,$2a$10$O9oBis1OZ6kGVdyLmlyBr.JqY/gmV5i6JUCSkHvmRG9LXkWYL9Nw.,FACILITY_MANAGER,false,avatars/m_avatar3.png

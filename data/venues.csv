@@ -1,0 +1,26 @@
+id,court_image,court_location,court_name,courts_available,created_by,disabled,game_icon,price,rating,sport
+2af513ab-3b17-4c46-8ae6-5e2a6ace110d,court-icons/bcourt1.png,"Koramangala, Bengaluru",Sky Smash Arena,4,18bb0b77-4858-4f20-97d8-fa6af4d8b57b,false,sport-icons/badminton_icon.png,220,4.50,Badminton
+43eafe53-7e5b-4da0-b5a5-504a32d51e5f,court-icons/bcourt2.png,"Jayanagar, Bengaluru",Feather Flight,3,754f4364-315e-4ac8-bde0-6f04e3c37b20,false,sport-icons/badminton_icon.png,210,4.40,Badminton
+7ebefbca-83ad-4349-91fb-5412e67ad17c,court-icons/bcourt3.png,"Hennur, Bengaluru",Racquet Zone,3,893c6a02-338f-4e2d-9690-5106da041f30,false,sport-icons/badminton_icon.png,230,4.30,Badminton
+7ace63d9-422d-45e4-9d8a-53be52ca37d1,court-icons/vcourt1.png,"Indiranagar, Bengaluru",Net Warriors,3,fe4b86b0-1758-4499-8221-f27b98da1d47,false,sport-icons/volleyball_icon.png,250,4.20,Volleyball
+e9faac0d-8233-4776-8e72-31f9b1d8880e,court-icons/vcourt2.png,"Whitefield, Bengaluru",Breeze Sports Hub,3,7c6228e3-95bd-4a81-be99-8e053eff5d4d,false,sport-icons/volleyball_icon.png,240,4.10,Volleyball
+f06c9aee-5944-4386-9644-42437ac977dd,court-icons/vcourt3.png,"Marathahalli, Bengaluru",Ekam Sports,4,3ea5c131-c496-4381-9e09-65eea4320331,false,sport-icons/volleyball_icon.png,260,4.30,Volleyball
+b4bbd762-ed78-46ed-bce5-3c10c4b51942,court-icons/scourt1.png,"JP Nagar, Bengaluru",AquaFit Arena,4,38f0e10d-0e85-4247-9043-73bdacb9c628,false,sport-icons/swimming_icon.png,480,4.60,Swimming
+4bc73e65-1227-407b-a949-0db3e0e7e52a,court-icons/scourt2.png,"Basavanagudi, Bengaluru",Blue Lagoon,3,2f66d746-16bd-4234-8afb-eb57eb65882c,false,sport-icons/swimming_icon.png,450,4.40,Swimming
+3b155df0-66d1-43a0-9359-143780e4ffec,court-icons/scourt3.png,"Malleswaram, Bengaluru",Crystal Clear,4,18bb0b77-4858-4f20-97d8-fa6af4d8b57b,false,sport-icons/swimming_icon.png,500,4.70,Swimming
+4a81a692-2c24-4233-b705-580c96325006,court-icons/ccourt1.png,"HSR Layout, Bengaluru",Cricket Central,3,754f4364-315e-4ac8-bde0-6f04e3c37b20,false,sport-icons/cricket_icon.png,1100,4.70,Cricket
+89369b44-561e-40f8-8a61-2dd421fe0776,court-icons/ccourt2.png,"Kalyan Nagar, Bengaluru",Boundary Line,3,893c6a02-338f-4e2d-9690-5106da041f30,false,sport-icons/cricket_icon.png,1050,4.50,Cricket
+d8a6f4c1-c569-4a96-a85f-935c8f6430ec,court-icons/fcourt1.png,"Electronic City, Bengaluru",Goal Arena,3,fe4b86b0-1758-4499-8221-f27b98da1d47,false,sport-icons/football_icon.png,380,4.20,Football
+f8f1de79-c920-47c3-b75f-bc7eefd46984,court-icons/fcourt2.png,"Bellandur, Bengaluru",Turf Masters,3,7c6228e3-95bd-4a81-be99-8e053eff5d4d,false,sport-icons/football_icon.png,390,4.30,Football
+7bdc81c0-c614-49bf-8571-e6b9cd2e7aae,court-icons/bkcourt1.png,"BTM Layout, Bengaluru",Dunk House,3,3ea5c131-c496-4381-9e09-65eea4320331,false,sport-icons/basketball_icon.png,300,4.20,Basketball
+79c50afc-0b6d-4d35-816b-2d27548ab579,court-icons/bkcourt2.png,"Frazer Town, Bengaluru",Hoop House,3,38f0e10d-0e85-4247-9043-73bdacb9c628,false,sport-icons/basketball_icon.png,290,4.10,Basketball
+55e2fe53-7246-4d40-81ba-d1839b871f46,court-icons/tncourt1.png,"Sarjapur, Bengaluru",Ace Tennis Court,3,2f66d746-16bd-4234-8afb-eb57eb65882c,false,sport-icons/tennis_icon.png,320,4.30,Tennis
+a7648835-42f0-4a86-9366-a419da0125b7,court-icons/tncourt2.png,"Ulsoor, Bengaluru",Net Court Pro,2,18bb0b77-4858-4f20-97d8-fa6af4d8b57b,false,sport-icons/tennis_icon.png,340,4.40,Tennis
+c0847487-18ca-490e-a674-dda7616b555b,court-icons/tcourt1.png,"MG Road, Bengaluru",Table Tango,3,754f4364-315e-4ac8-bde0-6f04e3c37b20,false,sport-icons/tabletennis_icon.png,190,4.20,Table Tennis
+f2f4e759-a8d3-4f28-9b54-31560066eddc,court-icons/tcourt2.png,"Rajajinagar, Bengaluru",Spin City,3,893c6a02-338f-4e2d-9690-5106da041f30,false,sport-icons/tabletennis_icon.png,200,4.30,Table Tennis
+c59c6078-0f49-4555-9578-99a85a98e8c7,court-icons/sqcourt1.png,"Nagarbhavi, Bengaluru",Squash Point,2,fe4b86b0-1758-4499-8221-f27b98da1d47,false,sport-icons/squash_icon.png,330,4.30,Squash
+2d520d27-50c1-45cd-a600-2fb1d7a64f4e,court-icons/sqcourt2.png,"Nagawara, Bengaluru",Racquet Masters,2,7c6228e3-95bd-4a81-be99-8e053eff5d4d,false,sport-icons/squash_icon.png,320,4.20,Squash
+1d737853-6262-4344-91f7-9f1980245b4f,court-icons/hcourt1.png,"Hebbal, Bengaluru",Ice Hockey Rink,2,3ea5c131-c496-4381-9e09-65eea4320331,false,sport-icons/hockey_icon.png,420,4.40,Hockey
+d0456009-9883-42d7-b691-7e0ad3906d66,court-icons/hcourt2.png,"Yeshwanthpur, Bengaluru",Striker's Den,2,38f0e10d-0e85-4247-9043-73bdacb9c628,false,sport-icons/hockey_icon.png,430,4.50,Hockey
+6c4fcca0-38df-45f5-a97c-c916d6fc57ae,court-icons/chcourt1.png,"Domlur, Bengaluru",Checkmate Lounge,3,2f66d746-16bd-4234-8afb-eb57eb65882c,false,sport-icons/chess_icon.png,150,4.60,Chess
+b815bb8d-dc5e-41d3-b27b-24bb5727dbbc,court-icons/chcourt2.png,"Kammanahalli, Bengaluru",Kings Gambit Club,3,18bb0b77-4858-4f20-97d8-fa6af4d8b57b,false,sport-icons/chess_icon.png,160,4.50,Chess
