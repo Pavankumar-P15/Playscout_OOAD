@@ -21,5 +21,7 @@ public class BookingResponse {
     private String bookingSlot;
     private BookingStatus status;
     private RefundStatus refundStatus;
+    private String orderId;
+    private String paymentIntentId;
     private OffsetDateTime createdAt;
 }

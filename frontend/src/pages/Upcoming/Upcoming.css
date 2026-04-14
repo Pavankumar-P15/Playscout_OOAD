@@ -125,6 +125,16 @@
   cursor: not-allowed;
 }
 
+.paid-badge {
+  display: inline-block;
+  background-color: #1a9b39;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
 .bookings-table .icon-image {
   width: 40px;
 }

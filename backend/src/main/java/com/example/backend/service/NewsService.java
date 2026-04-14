@@ -3,6 +3,7 @@ package com.example.backend.service;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +37,7 @@ public class NewsService {
     private volatile List<Map<String, String>> cachedArticles = List.of();
     private volatile Instant cacheFetchedAt = Instant.EPOCH;
 
-    public NewsService(NewsSourceAdapter newsSourceAdapter) {
+    public NewsService(@Qualifier("newsApiAdapter") NewsSourceAdapter newsSourceAdapter) {
         this.newsSourceAdapter = newsSourceAdapter;
     }
 

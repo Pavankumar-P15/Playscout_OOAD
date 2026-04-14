@@ -166,6 +166,8 @@ public class BookingService {
             booking.getBookingSlot(),
             booking.getStatus(),
             booking.getRefundStatus(),
+            booking.getOrderId(),
+            booking.getPaymentIntentId(),
             booking.getCreatedAt()
         );
     }

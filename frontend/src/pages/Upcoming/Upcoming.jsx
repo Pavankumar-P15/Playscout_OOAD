@@ -330,7 +330,9 @@ const Upcoming = () => {
                   </td>
                   <td className='small-column'>{booking.refundStatus || '—'}</td>
                   <td className='small-column'>
-                    {canPayNow(booking) ? (
+                    {booking.paymentIntentId ? (
+                      <span className='paid-badge'>PAID</span>
+                    ) : canPayNow(booking) ? (
                       <button
                         type='button'
                         className='pay-now-btn'
