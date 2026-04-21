@@ -59,7 +59,7 @@ The screenshots of the rest of the pages are in the previews folder.
 
 PlayScout implements core OOPS patterns and principles for clean, maintainable code:
 
-**Design Patterns** - Builder pattern for complex Booking objects, Factory for entity creation, Strategy for flexible validation and payment processing, Adapter for DTO conversions, and Command pattern for message handling.
+**Design Patterns** - Builder pattern for complex Booking objects, Template pattern for entity creation, Strategy for flexible validation and payment processing, Adapter for DTO conversions, and Command pattern for message handling.
 
 **Core Principles** - Single Responsibility (each service handles one concern), Dependency Inversion (Spring DI throughout), Interface Segregation (separate DTOs for requests/responses), and Low Coupling (frontend and backend communicate through stable DTO contracts).
 

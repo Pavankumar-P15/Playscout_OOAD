@@ -17,10 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.backend.dto.CreateGameRequest;
 import com.example.backend.dto.GameResponse;
-import com.example.backend.factory.VenueActionFactory;
-import com.example.backend.factory.VenueActionHandler;
-import com.example.backend.factory.VenueActionType;
 import com.example.backend.service.GameService;
+import com.example.backend.template.GameCreationProcessor;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,7 +28,7 @@ import lombok.RequiredArgsConstructor;
 public class GameController {
     
     private final GameService gameService;
-    private final VenueActionFactory venueActionFactory;
+    private final GameCreationProcessor gameCreationProcessor;
 
     @GetMapping
     public ResponseEntity<Map<String, Object>> getGameList() {
@@ -56,9 +54,7 @@ public class GameController {
             Authentication authentication,
             @RequestBody CreateGameRequest request) {
         try {
-            VenueActionHandler<CreateGameRequest, GameResponse> createHandler =
-                    venueActionFactory.getHandler(VenueActionType.CREATE, CreateGameRequest.class);
-            GameResponse game = createHandler.execute(authentication.getName(), request);
+            GameResponse game = gameCreationProcessor.processAction(authentication.getName(), request);
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(Map.of("success", true, "message", "Game created successfully", "data", game));
         } catch (IllegalArgumentException ex) {

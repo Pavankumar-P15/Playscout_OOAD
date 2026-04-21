@@ -1,11 +1,9 @@
 package com.example.backend.controller;
 
 import com.example.backend.dto.BookingRequest;
-import com.example.backend.factory.VenueActionFactory;
-import com.example.backend.factory.VenueActionHandler;
-import com.example.backend.factory.VenueActionType;
 import com.example.backend.model.Booking;
 import com.example.backend.service.BookingService;
+import com.example.backend.template.BookingProcessor;
 import jakarta.validation.Valid;
 import java.util.Map;
 import java.util.UUID;
@@ -19,11 +17,11 @@ import org.springframework.web.bind.annotation.*;
 public class BookingController {
 
     private final BookingService bookingService;
-    private final VenueActionFactory venueActionFactory;
+    private final BookingProcessor bookingProcessor;
 
-    public BookingController(BookingService bookingService, VenueActionFactory venueActionFactory) {
+    public BookingController(BookingService bookingService, BookingProcessor bookingProcessor) {
         this.bookingService = bookingService;
-        this.venueActionFactory = venueActionFactory;
+        this.bookingProcessor = bookingProcessor;
     }
 
     @PostMapping("/add-booking")
@@ -39,9 +37,8 @@ public class BookingController {
             ));
         }
         String actor = authentication.getName();
-        VenueActionHandler<BookingRequest, Booking> bookingHandler =
-            venueActionFactory.getHandler(VenueActionType.BOOK, BookingRequest.class);
-        Booking booking = bookingHandler.execute(actor, request);
+        // Uses Template Method Pattern instead of a Factory
+        Booking booking = bookingProcessor.processAction(actor, request);
 
         return ResponseEntity.ok(Map.of(
             "success", true,
