@@ -9,20 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.backend.adapter.NewsSourceAdapter;
 
-/**
- * Proxy Pattern: Controls access to expensive external resource (news source) through caching.
- * Depends on NewsSourceAdapter abstraction, not concrete implementations.
- * 
- * Open-Closed Principle: Service is closed for modification but open for extension.
- * To add new news sources (RSS, Twitter, Reddit, etc.), simply create new adapter implementations
- * and inject them. The NewsService proxy logic remains unchanged.
- * 
- * Example - Can switch implementations via constructor injection:
- * - new NewsService(new NewsApiAdapter(...))          // GNews API
- * - new NewsService(new RssFeedAdapter(...))          // RSS feeds
- * - new NewsService(new TwitterApiAdapter(...))       // Twitter
- * - new NewsService(new NewsAggregatorAdapter(...))   // Multiple sources combined
- */
+
 @Service
 public class NewsService {
 
@@ -41,10 +28,7 @@ public class NewsService {
         this.newsSourceAdapter = newsSourceAdapter;
     }
 
-    /**
-     * Proxy method: Returns cached articles if fresh, otherwise delegates to adapter to fetch fresh data.
-     * Uses double-checked locking for thread-safe caching.
-     */
+ 
     public List<Map<String, String>> getSportsNews() {
         // First check without lock (fast path)
         if (isCacheFresh()) {
@@ -68,9 +52,7 @@ public class NewsService {
         }
     }
 
-    /**
-     * Proxy decides: should we use cached version or fetch fresh data?
-     */
+  
     private boolean isCacheFresh() {
         if (cacheTtlSeconds <= 0 || cacheFetchedAt.equals(Instant.EPOCH)) {
             return false;

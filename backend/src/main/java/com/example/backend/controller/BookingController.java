@@ -37,7 +37,6 @@ public class BookingController {
             ));
         }
         String actor = authentication.getName();
-        // Uses Template Method Pattern instead of a Factory
         Booking booking = bookingProcessor.processAction(actor, request);
 
         return ResponseEntity.ok(Map.of(

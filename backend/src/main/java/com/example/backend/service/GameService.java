@@ -48,34 +48,8 @@ public class GameService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        if (request.getVenueId() == null) {
-            throw new IllegalArgumentException("Venue id is required");
-        }
-        if (request.getDate() == null) {
-            throw new IllegalArgumentException("Game date is required");
-        }
-        if (request.getSlot() == null || request.getSlot().isBlank()) {
-            throw new IllegalArgumentException("Game slot is required");
-        }
-        if (request.getTotalMembers() == null || request.getTotalMembers() <= 0) {
-            throw new IllegalArgumentException("Total members must be greater than 0");
-        }
-        if (request.getMembersJoined() == null || request.getMembersJoined() <= 0) {
-            throw new IllegalArgumentException("Members joined must be greater than 0");
-        }
-        if (request.getMembersJoined() > request.getTotalMembers()) {
-            throw new IllegalArgumentException("Members joined cannot exceed total members");
-        }
-        if (request.getSkillLevel() == null || request.getSkillLevel().isBlank()) {
-            throw new IllegalArgumentException("Skill level is required");
-        }
-
         Venue venue = venueRepository.findById(request.getVenueId())
                 .orElseThrow(() -> new IllegalArgumentException("Venue not found"));
-
-        if (Boolean.TRUE.equals(venue.getDisabled())) {
-            throw new IllegalArgumentException("This venue is currently disabled");
-        }
 
         LocalTime[] parsedSlot = parseSlot(request.getSlot());
         LocalTime startTime = parsedSlot[0];

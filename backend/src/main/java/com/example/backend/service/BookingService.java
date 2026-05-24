@@ -173,13 +173,7 @@ public class BookingService {
     }
 
     private LocalTime[] parseSlotTimes(String bookingSlot) {
-        if (bookingSlot == null || bookingSlot.isBlank()) {
-            throw new IllegalArgumentException("Booking slot is required");
-        }
         String[] parts = bookingSlot.split("-");
-        if (parts.length != 2) {
-            throw new IllegalArgumentException("Invalid booking slot format: " + bookingSlot);
-        }
         LocalTime start = parseTime(parts[0].trim(), bookingSlot);
         LocalTime end = parseTime(parts[1].trim(), bookingSlot);
         return new LocalTime[] { start, end };
